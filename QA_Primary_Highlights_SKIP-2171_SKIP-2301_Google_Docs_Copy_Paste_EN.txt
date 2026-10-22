@@ -1,0 +1,634 @@
+﻿QA VALIDATION REPORT | PROPERTY PAGE — PRIMARY HIGHLIGHTS
+══════════════════════════════════════════════════════════════════
+
+Work items: SKIP-2171 (Property Page > Primary Highlights), SKIP-2301 (Luca > Property Page Highlights)
+Related test work item: SKIP-2248 (Test — Property Page Primary Highlights)
+Environment: Iglu Ski Staging; skip-2301.staging.igluski.com observed in the browser
+Feature variant requested for testing: primary-highlights=B
+Report compiled: 22 October 2026
+Scope: Manual UI verification and read-only SQL Server checks of the Ski database
+Overall QA recommendation: IN TEST — sign-off pending the three priority findings listed in Section 0
+Requirements traceability: Every outstanding finding is cross-referenced to wording visible in the Jira ticket screenshots (Section 1A).
+
+    Evidence standard: This report distinguishes what was seen on screen or returned by SQL from interpretation, requirements questions and untested cases. It does not establish a root cause. The A/B cookie was requested for testing, but its exact value was not independently captured in every screenshot. Screenshots were supplied during the QA session; they are not embedded in this text report. Holiday IDs below were read from visible offer pages or browser URLs, not inferred from SQL joins.
+
+──────────────────────────────────────────────────────────────────
+0. ACTION REQUIRED — PRIORITY FINDINGS (READ THIS FIRST)
+──────────────────────────────────────────────────────────────────
+
+QA status: IN TEST — NOT READY FOR PASS. Five offers were reviewed. The feature works in several positive examples, but the three cases below need product clarification and/or a targeted fix before final sign-off. No root cause has been verified.
+
+PRIORITY 1 — TRANSFERS HIGHLIGHT MISSING | CLUB MED LES ARCS PANORAMA
+
+Finding F-01 · Most direct mismatch with a written rule · Property 36707 · Holiday 203290784 · 2/4 cards
+
+    Ticket requirement — SKIP-2171, Transfers: “IF No transfer is included THEN show ‘Not included’” and “show shortest transfer time for the resort”. Also relates to REQ-01 (four primary highlights).
+
+• Expected if the rule applies to this offer: a Transfers card labelled “Not included”, with the shortest available resort transfer duration.
+• Observed: the booking summary states “Transfers & Flights: Not included” (accommodation-only offer), but no Transfers card or alternative duration is shown.
+• User-facing consequence: the planned transfer information is not available in the highlights area; the offer summary still discloses that transfers are not included.
+• Decision / action needed: PO: confirm if the rule applies to accommodation-only offers. Development: if applicable, check whether an alternative resort transfer duration exists and whether the card should render; then correct and rerun this specific offer.
+• Evidence: UI offer summary and highlights screenshots; see REQ-05, F-01, SC-12, Section 5.3. No claim is made about whether the cause lies in data, logic or deployment.
+
+PRIORITY 2 — RESORT LOCATION FALLBACK / CARD PLACEMENT | RODELLA HOTEL
+
+Finding F-02 · Requirement placement is ambiguous · Property 2549 · Holiday 158518187 · 3/4 cards
+
+    Ticket requirement — SKIP-2171, Resort Centre Location: “IF the walk is over 1000m THEN distance to bus stop is shown instead”. Also relates to REQ-01.
+
+• Expected subject to PO design confirmation: when the centre is more than 1,000 m away, show the bus-stop distance in the intended resort-location experience instead of the standard walking-time message.
+• Observed: SQL records TownDistance=1200, TownDistanceMinutes=12 and SkiBusStopDistance=10. “Ski Bus: 10m away” appears under Ski Access, but Resort Location is absent.
+• User-facing consequence: the bus-stop value is displayed, although not in the expected location card; this is not yet a confirmed separate bug.
+• Decision / action needed: PO/design: specify whether Ski Access already fulfils the fallback or whether Resort Location must still appear. Development: adjust only if the confirmed specification requires it.
+• Evidence: SQL and highlights screenshots; see REQ-06, F-02, SC-08, Section 5.5. Do not confuse this with the separate slopes-to-bus-stop rule (REQ-07).
+
+PRIORITY 3 — ONLY ONE CARD / NULL FALLBACK | APARTMENT PETIT PONT
+
+Finding F-03 · Missing-data rule not defined · Property 33586 · Holiday 127580406 · 1/4 cards
+
+    Ticket requirement — SKIP-2301, Acceptance Criteria: “4 primary highlights for property page displayed”. Related to SKIP-2171's over-1,000 m centre fallback (REQ-06).
+
+• Expected from the design wording: four highlights, unless exceptions for unavailable or inapplicable inputs are approved.
+• Observed: only Snow Security appears. SQL records TownDistance=1100, TownDistanceMinutes=11, and SkiBusStopDistance=NULL.
+• User-facing consequence: substantially less information is available in the highlights row; the source data does not currently establish a valid bus-stop fallback.
+• Decision / action needed: PO: decide what to display when a field is NULL, and whether four cards are mandatory. Development: apply the agreed fallback or intentional-hide behaviour and rerun the offer.
+• Evidence: SQL and UI screenshots; see REQ-01, REQ-06, F-03, SC-09, Section 5.4. NULL is missing data, not zero metres.
+
+SHARED ACCEPTANCE DECISION — FOUR CARDS OR CONDITIONAL CARDS?
+
+SKIP-2301 says “4 primary highlights for property page displayed”. The observed counts were 4/4 (Villa Cary), 4/4 (Hotel Sportiv), 3/4 (Rodella), 2/4 (Club Med), and 1/4 (Petit Pont). This difference is evidence of an acceptance-criteria question, not automatically three independent implementation defects. PO decision required: are all four cards mandatory for every property, or should missing/inapplicable cards be omitted?
+
+Recommended next step: Obtain the PO's answers to the three questions above, confirm relevant data availability with Development, and rerun Club Med → Rodella → Petit Pont. Do not change status to PASS on the strength of other successful examples alone.
+
+──────────────────────────────────────────────────────────────────
+QUICK NAVIGATION
+──────────────────────────────────────────────────────────────────
+
+• 0. Action required — priority findings — one-page review for PO and developers
+• 1. Executive summary — prioritised outstanding issues
+• 1A. Requirements-to-findings traceability — exact ticket wording for each observation
+• 2. Reproduction guide — how to repeat the tests
+• 3. Property and Holiday ID register — the five inspected offers
+• 4. Acceptance criteria and scenario matrix — PASS, unresolved and untested conditions
+• 5. Key evidence and technical observations — property-by-property findings
+• 6. Read-only SQL reproduction pack — SQL queries Q01–Q13
+• 7. Questions for Product / Development — decisions needed
+• 8. Remaining coverage / next test actions
+• 9. Suggested concise Jira comment
+
+──────────────────────────────────────────────────────────────────
+1. EXECUTIVE SUMMARY (FOR THE PRODUCT OWNER AND DEVELOPERS)
+──────────────────────────────────────────────────────────────────
+
+Start with Section 0: three outstanding findings, each mapped to its exact Jira clause and a specific decision or retest.
+
+The Primary Highlights component was observed below the image gallery on multiple Staging property pages. Positive examples were confirmed for snow information, ski-in/ski-out or ski-bus access, included transfers and the available resort-location values. Three properties did not display all four highlights, and one specific “Transfers not included” scenario could not display the content described in the requirements.
+
+Findings requiring action or clarification
+
+  01. Highest priority — requirement mismatch to investigate
+       Finding: Transfer highlight absent when transfers are not included
+       Reproduction reference: Club Med Les Arcs Panorama — Property 36707; Holiday 203290784
+       Observed outcome: Offer panel says “Transfers & Flights: Not included”, but no Transfers highlight or fallback transfer time is shown; only 2 highlights appear
+       Why it matters: The SKIP-2171 specification describes a “Not included” state with an alternative transfer time. Confirm whether this applies to accommodation-only bookings and whether the resort's transfer data is available.
+
+  02. Requirements clarification
+       Finding: Resort Location absent with town distance above 1,000 m and valid bus-stop data
+       Reproduction reference: Rodella Hotel — Property 2549; Holiday 158518187
+       Observed outcome: SQL: 1,200 m / 12 min to town and 10 m to ski-bus stop. UI: “Ski Bus: 10m away” under Ski Access, but no separate Resort Location highlight; 3 highlights appear
+       Why it matters: Clarify whether the >1,000 m fallback belongs in Resort Location, whether Ski Access replaces it, or whether omission is intentional.
+
+  03. Missing-data clarification
+       Finding: Only one highlight when fallback bus-stop information is absent
+       Reproduction reference: Apartment Petit Pont — Property 33586; Holiday 127580406
+       Observed outcome: SQL: 1,100 m / 11 min to town; SkiBusStopDistance=NULL. UI: only Snow Security is visible
+       Why it matters: Behaviour is inconclusive without a documented rule for missing fallback data.
+
+  04. Cross-cutting
+       Finding: Number of highlights differs across properties
+       Reproduction reference: Villa Cary 4/4; Hotel Sportiv 4/4; Rodella 3/4; Club Med 2/4; Petit Pont 1/4
+       Observed outcome: Not all sampled pages display four cards
+       Why it matters: SKIP-2301 explicitly mentions four highlights. PO/design confirmation is needed on whether cards may be suppressed when data or applicable services are missing.
+
+Disposition: Do not mark SKIP-2171 / SKIP-2301 as fully passed. The missing Transfers highlight is the strongest observed requirement mismatch. The other absences should be reviewed against intended conditional behaviour before being classified as independent defects.
+
+──────────────────────────────────────────────────────────────────
+1A. REQUIREMENTS-TO-FINDINGS TRACEABILITY (EXACT JIRA WORDING)
+──────────────────────────────────────────────────────────────────
+
+Source: The following quotations were transcribed from the screenshots of the SKIP-2171 and SKIP-2301 Jira descriptions / acceptance criteria provided during QA. Only the relevant sentence or clause is quoted. These are requirement references, not claims about the implementation, the cause of an issue, or product decisions that have not been made.
+
+  01. REQ-01
+       Source: SKIP-2301 — Acceptance Criteria
+       Exact relevant wording shown in Jira: “4 primary highlights for property page displayed”
+       Meaning for QA: The specified design targets four displayed highlights. Whether unavailable data justifies fewer requires PO confirmation.
+
+  02. REQ-02
+       Source: SKIP-2171 — Acceptance Criteria
+       Exact relevant wording shown in Jira: “Primary Highlights should be shown on the property page”
+       Meaning for QA: The component should be visible on the property page.
+
+  03. REQ-03
+       Source: SKIP-2171 — Acceptance Criteria
+       Exact relevant wording shown in Jira: “These should be shown underneath the image gallery”
+       Meaning for QA: Position beneath the gallery was verified on the sampled pages.
+
+  04. REQ-04
+       Source: SKIP-2171 — Acceptance Criteria
+       Exact relevant wording shown in Jira: “The data in each of the boxes should be a reflection of the data described in the description”
+       Meaning for QA: Contents need to match the relevant rules and input data; it does not define behaviour when inputs are missing.
+
+  05. REQ-05
+       Source: SKIP-2171 — Transfers description
+       Exact relevant wording shown in Jira: “IF No transfer is included THEN show ‘Not included’” and “show shortest transfer time for the resort”
+       Meaning for QA: A not-included state and alternative duration are described. Applicability to accommodation-only offers needs clarification.
+
+  06. REQ-06
+       Source: SKIP-2171 — Resort Centre Location description
+       Exact relevant wording shown in Jira: “IF the walk is over 1000m THEN distance to bus stop is shown instead”
+       Meaning for QA: A bus-stop fallback is specified for centre-distance cases exceeding 1,000 m; the precise placement / omission behaviour needs confirmation.
+
+  07. REQ-07
+       Source: SKIP-2171 — Ski Lift Location description
+       Exact relevant wording shown in Jira: “IF the distance is over 1000m from the slopes THEN show distance to bus stop instead”
+       Meaning for QA: Separate ski-access fallback. Do not confuse this with REQ-06: slopes and resort centre are distinct conditions.
+
+  08. REQ-08
+       Source: SKIP-2171 — Resort Centre Location description
+       Exact relevant wording shown in Jira: “IF Under 6 minutes walk it should then show ‘You're in the centre’”
+       Meaning for QA: The example with 2 minutes displays a different, similar phrase. Record as a wording observation, not automatically a blocking defect.
+
+FINDING F-01 — CLUB MED LES ARCS PANORAMA (STRONGEST MISMATCH)
+
+• Relevant ticket wording: REQ-05 and REQ-01 (plus the general data-consistency rule REQ-04).
+• Observed evidence: Property 36707; Holiday 203290784; accommodation-only offer states “Transfers & Flights: Not included”. The Primary Highlights row shows 2 of 4 cards, with no Transfers card and no alternative transfer duration.
+• Expected from the written requirement, if applicable: A Transfers highlight stating “Not included” and the shortest resort transfer time.
+• Assessment: Observed mismatch with the written Transfers rule; scope/data clarification required. Confirm whether the rule includes accommodation-only bookings and whether a resort-level fallback transfer time is available. No root cause is established.
+
+FINDING F-02 — RODELLA HOTEL (LOCATION/FALLBACK AMBIGUITY)
+
+• Relevant ticket wording: REQ-06 for Resort Centre Location, REQ-01 for four cards. REQ-07 applies to ski access, not automatically to resort centre.
+• Observed evidence: Property 2549; Holiday 158518187; SQL shows TownDistance=1200, TownDistanceMinutes=12, SkiBusStopDistance=10. Site shows “Ski Bus: 10m away” in Ski Access; Resort Location is absent; 3 of 4 highlights appear.
+• Expected from the written requirement, subject to placement confirmation: Over 1,000 m from the resort centre, show bus-stop distance instead of centre walking distance.
+• Assessment: Clarification required, not a confirmed independent bug. The 10 m bus-stop value is visible in Ski Access. Ask whether this satisfies the intended fallback or Resort Location must remain visible.
+
+FINDING F-03 — APARTMENT PETIT PONT (MISSING-DATA BEHAVIOUR)
+
+• Relevant ticket wording: REQ-01 for four cards, and REQ-06 for the centre-distance fallback.
+• Observed evidence: Property 33586; Holiday 127580406; SQL shows TownDistance=1100, TownDistanceMinutes=11, SkiBusStopDistance=NULL. Only 1 of 4 highlights is visible.
+• Expected from the written requirement: Four highlights are specified in the design; the centre-distance fallback is described, but no rule for NULL bus-stop data is given in the supplied Jira description.
+• Assessment: Unresolved requirements question, not a proven application defect. Confirm whether cards should be hidden or display alternate/fallback copy when input data is missing.
+
+Cross-cutting observation — Four-card count
+
+• Relevant ticket wording: REQ-01.
+• Observed counts: Villa Cary 4/4, Hotel Sportiv 4/4, Rodella 3/4, Club Med 2/4, Apartment Petit Pont 1/4.
+• Assessment: The observed count differs from the explicit SKIP-2301 acceptance criterion in three examples. However, SKIP-2171 includes conditional content and missing inputs; ask the PO whether four cards are mandatory or a design target subject to valid/applicable data before marking all three examples as defects.
+
+ADDITIONAL MINOR COPY OBSERVATION — VILLA CARY
+
+• Relevant ticket wording: REQ-08.
+• Observed evidence: SQL shows 2 minutes to the centre; the UI displays “In Resort Centre” rather than the specified “You're in the centre”.
+• Assessment: Possible wording discrepancy. The concept is broadly equivalent, so verify whether exact copy is required; do not conflate this with the three outstanding findings above.
+
+──────────────────────────────────────────────────────────────────
+2. REPRODUCTION GUIDE
+──────────────────────────────────────────────────────────────────
+
+1. Open the applicable property offer in the SKIP-2301 Staging branch and use the test variant primary-highlights=B as requested by the development team. Check the actual cookie in browser DevTools if the result is uncertain.
+2. Scroll to Primary Highlights, immediately beneath the image gallery.
+3. Record the number of cards, each card's label and value, and its hover tooltip.
+4. Compare Transfers against the offer's What's Included panel. In particular, distinguish package transfers from an accommodation-only offer.
+5. Use the read-only SQL checks in Section 6 to compare the displayed resort/property data with dbo.Property, dbo.Resort and the applicable feature associations.
+6. Capture the property URL including its Holiday ID, the complete highlights row, relevant tooltips, the booking summary, and the SQL result where required. Do not treat an unavailable highlight as proof of the underlying reason.
+
+Known branch URL captured:
+https://skip-2301.staging.igluski.com/ski-resorts/italy/selva-val-gardena/rodella-hotel_2549?holidayId=158518187
+
+The other Holiday IDs were captured from visible page URLs or offer panels, but this report does not invent their full branch-specific URLs.
+
+──────────────────────────────────────────────────────────────────
+3. PROPERTY AND HOLIDAY ID REGISTER
+──────────────────────────────────────────────────────────────────
+
+These five properties were opened for functional inspection during the session. “Validated” means the recorded UI scenario was examined, not that the property or complete work item passed every acceptance criterion.
+
+  01. Villa Cary Hotel — Sauze d'Oulx, Italy
+       Property ID: 2541
+       Holiday ID captured: 2025028098
+       Context / verified highlights: Snow Security; Ski Access; Resort Location (“In Resort Centre”); Transfers (included)
+       Observed count: 4/4
+
+  02. Hotel Sportiv by VAYA — Obergurgl, Austria
+       Property ID: 1386
+       Holiday ID captured: 166713775
+       Context / verified highlights: Snow Sure Skiing; Ski Access (“Ski-in / Ski-out”); Resort Location (“6 mins walk to centre”); Transfers (included)
+       Observed count: 4/4
+
+  03. Club Med Les Arcs Panorama — Les Arcs 1600, France
+       Property ID: 36707
+       Holiday ID captured: 203290784
+       Context / verified highlights: Snow Sure Skiing; Ski Access (“Ski-in / Ski-out”). Resort Location and Transfers absent; offer says “Transfers & Flights: Not included”
+       Observed count: 2/4
+
+  04. Apartment Petit Pont — Villars, Switzerland
+       Property ID: 33586
+       Holiday ID captured: 127580406
+       Context / verified highlights: Snow Security only. Ski Access, Resort Location and Transfers absent; accommodation-only offer
+       Observed count: 1/4
+
+  05. Rodella Hotel — Selva Val Gardena, Italy
+       Property ID: 2549
+       Holiday ID captured: 158518187
+       Context / verified highlights: Snow Sure Skiing; Ski Access (“Ski Bus: 10m away”); Transfers (included). Resort Location absent
+       Observed count: 3/4
+
+SQL-only candidate, not functionally validated: Bellevarde Lodge - Cognac (PropertyId=15174, TownDistance=1100, TownDistanceMinutes=11, SkiBusStopDistance=50). No Holiday ID or page-level result was established for this property.
+
+──────────────────────────────────────────────────────────────────
+4. ACCEPTANCE CRITERIA AND SCENARIO MATRIX
+──────────────────────────────────────────────────────────────────
+
+Requirement source: SKIP-2171 conditional highlight descriptions and SKIP-2301 acceptance criteria. Each outstanding finding is traced to exact wording in Section 1A (REQ-01–REQ-08). The matrix below reports only evidence collected during the QA session.
+
+  01. SC-01
+       Scenario / stated expectation: Highlights are placed beneath the image gallery
+       Evidence: Location confirmed on several sampled pages
+       Outcome: PASS — observed pages
+
+  02. SC-02
+       Scenario / stated expectation: REQ-01: Four highlights displayed
+       Evidence: Villa Cary and Hotel Sportiv: 4; Rodella: 3; Club Med: 2; Petit Pont: 1
+       Outcome: NOT MET on three samples; conditional rules need clarification
+
+  03. SC-03
+       Scenario / stated expectation: Snow Sure information reflects resort height / highest lift / snow cannons where applicable
+       Evidence: Villa Cary: altitude 1503, maximum lift 2840, snow cannons enabled. Club Med: 1600 / 3250 / enabled. Snow tooltips observed. Rodella and Hotel Sportiv snow highlights also visible
+       Outcome: PASS — positive examples only
+
+  04. SC-04
+       Scenario / stated expectation: Ski-in/Ski-out property displays direct slope access
+       Evidence: Club Med and Hotel Sportiv display “Ski-in / Ski-out”; Club Med's corresponding feature is present in SQL
+       Outcome: PASS — combined condition only
+
+  05. SC-05
+       Scenario / stated expectation: Where relevant, show ski-bus access and distance
+       Evidence: Rodella displays “Ski Bus: 10m away” and tooltip describing a nearby local shuttle stop; SQL confirms 10 m
+       Outcome: PASS — sampled ski-bus condition
+
+  06. SC-06
+       Scenario / stated expectation: REQ-08: Resort location for short town-centre distance; under 6 minutes has specific centre wording in specification
+       Evidence: Villa Cary: SQL 200m / 2min; UI says “In Resort Centre”, not the exact specified phrase “You're in the centre”
+       Outcome: FUNCTIONALLY PRESENT — wording not an exact match
+
+  07. SC-07
+       Scenario / stated expectation: At 6 minutes (not under 6), display walking time
+       Evidence: Hotel Sportiv: SQL 600m / 6min; UI “6 mins walk to centre”
+       Outcome: PASS — boundary example
+
+  08. SC-08
+       Scenario / stated expectation: REQ-06 (town centre, distinct from REQ-07 for ski access): Above 1,000 m, show bus-stop information instead of normal town-centre walking information
+       Evidence: Rodella: SQL 1200m / 12min, bus stop 10m; 10 m appears under Ski Access; Resort Location absent
+       Outcome: UNRESOLVED — confirm intended card/fallback
+
+  09. SC-09
+       Scenario / stated expectation: REQ-01 / REQ-06 (NULL behaviour unspecified): Above 1,000 m with no bus-stop distance
+       Evidence: Petit Pont: 1100m / 11min; bus-stop distance NULL; Resort Location absent
+       Outcome: INCONCLUSIVE — missing-data rule not specified
+
+  10. SC-10
+       Scenario / stated expectation: Location card when town distance itself is missing
+       Evidence: Club Med: TownDistance=NULL, TownDistanceMinutes=NULL; Resort Location absent
+       Outcome: INCONCLUSIVE — insufficient input data
+
+  11. SC-11
+       Scenario / stated expectation: Included transfers show an inclusion state and duration
+       Evidence: Villa Cary, Hotel Sportiv and Rodella show inclusion. Rodella tooltip: shared airport transfer (~1h 45m)
+       Outcome: PASS — sampled included offers
+
+  12. SC-12
+       Scenario / stated expectation: REQ-05: Not-included transfers show a “Not included” state and fallback/shortest transfer time
+       Evidence: Club Med's offer panel explicitly says not included; Transfers card not present
+       Outcome: NOT MET in observed UI — applicability/data to confirm
+
+  13. SC-13
+       Scenario / stated expectation: All distinct conditional alternatives
+       Evidence: Non-Snow-Sure resort; ski-in only; ski-out only; missing data/fallback combinations; transfer time when not included
+       Outcome: NOT FULLY TESTED
+
+Important nuance: SC-12 is a UI-to-requirement mismatch, not proof of an application code defect or a specific backend failure. The accommodation-only context may require an explicit product decision.
+
+──────────────────────────────────────────────────────────────────
+5. KEY EVIDENCE AND TECHNICAL OBSERVATIONS
+──────────────────────────────────────────────────────────────────
+
+5.1 VILLA CARY HOTEL — PROPERTYID=2541, HOLIDAYID=2025028098
+
+• Database: ResortId=3484, Altitude=1503, MaxLift=2840, HasSnowCannons=1, TownDistance=200, TownDistanceMinutes=2.
+• Four highlights were displayed. The location highlight reads “In Resort Centre”.
+• Snow and transfer tooltips were observed. The interface's resort-location message matches the intent of a central location, but not the exact under-six-minute wording in the specification.
+
+5.2 HOTEL SPORTIV BY VAYA — PROPERTYID=1386, HOLIDAYID=166713775
+
+• SQL search found TownDistance=600 and TownDistanceMinutes=6.
+• Four highlights displayed, including “Ski-in / Ski-out”, “6 mins walk to centre”, and transfers included.
+• Hover tooltips for the visible highlights were inspected.
+
+5.3 CLUB MED LES ARCS PANORAMA — PROPERTYID=36707, HOLIDAYID=203290784
+
+• Database: ResortId=25622, Altitude=1600, MaxLift=3250, HasSnowCannons=1; TownDistance and TownDistanceMinutes both NULL.
+• dbo.Feature / dbo.FeatureType confirms FeatureTypeId 135 — Ski in/Ski out; FeatureTypeId 88 — Snow sure was found at the associated resort.
+• UI: exactly two visible highlights (Snow Sure Skiing and Ski Access).
+• Offer: accommodation only; “Transfers & Flights: Not included”.
+• Missing: Transfers highlight, “Not included” highlight text, alternative transfer duration; Resort Location highlight also absent. The location omission is not independently classified as a defect because the town-distance values are missing.
+
+5.4 APARTMENT PETIT PONT — PROPERTYID=33586, HOLIDAYID=127580406
+
+• Database: TownDistance=1100, TownDistanceMinutes=11, SkiBusStopDistance=NULL.
+• UI: only Snow Security visible; offer is accommodation only.
+• Further requirements clarification is needed before determining whether a bus-stop fallback must appear despite missing bus-stop data. The absent Transfers highlight is also not independently diagnosed from this example.
+
+5.5 RODELLA HOTEL — PROPERTYID=2549, HOLIDAYID=158518187
+
+• Database: TownDistance=1200, TownDistanceMinutes=12, SkiBusStopDistance=10.
+• UI: three highlights — Snow Sure Skiing, Ski Access: Ski Bus: 10m away, Transfers: Included in package.
+• Ski Access tooltip states that a local resort shuttle bus stop is nearby. Transfer tooltip describes a shared airport transfer of approximately 1h 45m.
+• Missing: Resort Location. The bus-stop information is displayed, but under Ski Access, not Resort Location. Requires design/PO confirmation rather than an assumed root cause.
+• An earlier attempt produced a blank page on the branch; subsequent screenshots show the same branch rendering successfully. Do not carry forward the blank page as a confirmed defect.
+
+──────────────────────────────────────────────────────────────────
+6. READ-ONLY SQL REPRODUCTION PACK
+──────────────────────────────────────────────────────────────────
+
+All commands below are SELECT queries and can be executed in SQL Server Management Studio against Ski on the authorised Staging database. They do not update data or trigger an exporter. Check the connected server/environment before running. Statements consolidate SQL shown or used during the session; some discovery queries were normalised for readability.
+
+Q01 — IDENTIFY RELEVANT PROPERTY AND RESORT COLUMNS
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT
+        TABLE_SCHEMA,
+        TABLE_NAME,
+        COLUMN_NAME,
+        DATA_TYPE
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA = 'dbo'
+      AND TABLE_NAME IN ('Property', 'Resort')
+      AND (
+           COLUMN_NAME LIKE '%Lift%'
+        OR COLUMN_NAME LIKE '%Minut%'
+        OR COLUMN_NAME LIKE '%Height%'
+        OR COLUMN_NAME LIKE '%Altitude%'
+        OR COLUMN_NAME LIKE '%Snow%'
+      )
+    ORDER BY TABLE_NAME, COLUMN_NAME;
+
+Q02 — VERIFY PROPERTY-TO-RESORT DATA AND SNOW SURE INPUTS
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT
+        p.PropertyId,
+        p.Name AS PropertyName,
+        r.ResortId,
+        r.Name AS ResortName,
+        r.Altitude,
+        r.MaxLift,
+        r.HasSnowCannons
+    FROM dbo.Property AS p
+    INNER JOIN dbo.Resort AS r
+        ON p.ResortId = r.ResortId
+    WHERE p.PropertyId IN (2541, 36707);
+
+Captured results: Villa Cary 2541 / Resort 3484 / altitude 1503 / max lift 2840 / snow cannons 1; Club Med 36707 / Resort 25622 / altitude 1600 / max lift 3250 / snow cannons 1.
+
+Q03 — COMPARE CENTRE DISTANCE, WALKING TIME AND BUS-STOP FALLBACK FOR ALL FIVE PROPERTIES
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT
+        PropertyId,
+        Name,
+        TownDistance,
+        TownDistanceMinutes,
+        SkiBusStopDistance
+    FROM dbo.Property
+    WHERE PropertyId IN (2541, 1386, 36707, 33586, 2549)
+    ORDER BY PropertyId;
+
+Note: This combined form is provided for quick reproduction. The individual fields/properties were verified in separate screenshots; a screenshot of this exact combined query was not supplied.
+
+Q04 — FIND A SIX-MINUTE / 0–1,000 M EXAMPLE
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT TOP (15)
+        PropertyId,
+        Name,
+        TownDistance,
+        TownDistanceMinutes
+    FROM dbo.Property
+    WHERE TownDistanceMinutes BETWEEN 6 AND 20
+      AND TownDistance > 0
+      AND TownDistance <= 1000
+    ORDER BY TownDistanceMinutes, PropertyId;
+
+Captured example: Hotel Sportiv by VAYA 1386 / 600m / 6min.
+
+Q05 — FIND PROPERTIES MORE THAN 1,000 M FROM THE CENTRE
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT TOP (15)
+        PropertyId,
+        Name,
+        TownDistance,
+        TownDistanceMinutes
+    FROM dbo.Property
+    WHERE TownDistance > 1000
+      AND TownDistanceMinutes > 0
+    ORDER BY TownDistance, PropertyId;
+
+Captured examples: Apartment Petit Pont 33586 / 1100m / 11min; Rodella 2549 / 1200m / 12min.
+
+Q06 — LOCATE THE BUS-STOP FIELD IN THE PROPERTY SCHEMA
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT COLUMN_NAME, DATA_TYPE
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA = 'dbo'
+      AND TABLE_NAME = 'Property'
+      AND COLUMN_NAME LIKE '%Bus%';
+
+Captured result: SkiBusStopDistance (int).
+
+Q07 — INVESTIGATE APARTMENT PETIT PONT (MISSING BUS-STOP VALUE)
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT
+        PropertyId,
+        Name,
+        TownDistance,
+        TownDistanceMinutes,
+        SkiBusStopDistance
+    FROM dbo.Property
+    WHERE PropertyId = 33586;
+
+Captured result: 33586 / 1100 / 11 / NULL.
+
+Q08 — FIND PROPERTIES ABOVE 1,000 M WITH A POPULATED BUS-STOP DISTANCE
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT TOP (20)
+        PropertyId,
+        Name,
+        TownDistance,
+        TownDistanceMinutes,
+        SkiBusStopDistance
+    FROM dbo.Property
+    WHERE TownDistance > 1000
+      AND SkiBusStopDistance IS NOT NULL
+      AND SkiBusStopDistance > 0
+    ORDER BY TownDistance, PropertyId;
+
+Captured candidates: Bellevarde Lodge - Cognac 15174 / 1100m / 11min / bus 50m; Rodella Hotel 2549 / 1200m / 12min / bus 10m.
+
+Q09 — INSPECT RODELLA'S FALLBACK INPUT VALUES
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT
+        PropertyId,
+        Name,
+        TownDistance,
+        TownDistanceMinutes,
+        SkiBusStopDistance
+    FROM dbo.Property
+    WHERE PropertyId = 2549;
+
+Captured result: 2549 / 1200 / 12 / 10.
+
+Q10 — DISCOVER FEATURE TABLES AND THEIR COLUMNS
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT TABLE_SCHEMA, TABLE_NAME
+    FROM INFORMATION_SCHEMA.TABLES
+    WHERE TABLE_SCHEMA = 'dbo'
+      AND (
+           TABLE_NAME LIKE '%Feature%'
+        OR TABLE_NAME LIKE '%Facility%'
+        OR TABLE_NAME LIKE '%Amenit%'
+        OR TABLE_NAME LIKE '%Attribut%'
+      )
+    ORDER BY TABLE_NAME;
+
+    SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA = 'dbo'
+      AND TABLE_NAME IN ('Feature', 'FeatureLocated')
+    ORDER BY TABLE_NAME, ORDINAL_POSITION;
+
+Q11 — VERIFY CLUB MED PROPERTY FEATURES BY DESCRIPTION
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT
+        ft.FeatureTypeId,
+        ft.Description,
+        f.PropertyId,
+        f.ResortId
+    FROM dbo.Feature AS f
+    INNER JOIN dbo.FeatureType AS ft
+        ON f.FeatureTypeId = ft.FeatureTypeId
+    WHERE f.PropertyId = 36707
+    ORDER BY ft.FeatureTypeId;
+
+Captured result: FeatureTypeId=135, “Ski in/Ski out”; other property features also returned.
+
+Q12 — CHECK THE SNOW SURE FEATURE AT CLUB MED'S RESORT
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT
+        ft.FeatureTypeId,
+        ft.Description,
+        f.PropertyId,
+        f.ResortId
+    FROM dbo.FeatureType AS ft
+    LEFT JOIN dbo.Feature AS f
+        ON ft.FeatureTypeId = f.FeatureTypeId
+       AND f.ResortId = 25622
+    WHERE ft.Description LIKE '%Snow%'
+    ORDER BY ft.FeatureTypeId;
+
+Captured result: FeatureTypeId=88, “Snow sure”, associated with Resort 25622.
+
+Q13 — OPTIONAL SCHEMA DISCOVERY FOR HOLIDAY ID RELATIONSHIPS (PROPOSED, NOT EXECUTED)
+
+READ-ONLY SQL
+    USE [Ski];
+
+    SELECT TABLE_SCHEMA, TABLE_NAME
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE COLUMN_NAME IN ('HolidayId', 'PropertyId')
+    GROUP BY TABLE_SCHEMA, TABLE_NAME
+    HAVING COUNT(DISTINCT COLUMN_NAME) = 2
+    ORDER BY TABLE_NAME;
+
+Execution status: Suggested for future investigation, but no result was captured in this QA session. Do not use this query as evidence that any Holiday ID was linked to a property through SQL.
+
+──────────────────────────────────────────────────────────────────
+7. QUESTIONS FOR PRODUCT / DEVELOPMENT
+──────────────────────────────────────────────────────────────────
+
+1. Accommodation-only offers: Should the Transfers highlight still render as “Not included”, including a resort-level shortest transfer duration, when the booking has neither flights nor package transfers? If yes, which dataset supplies the time?
+2. Above 1,000 m: Does the specification require a separate Resort Location card showing the ski-bus stop, or should that information appear under Ski Access instead? Rodella currently has the latter only.
+3. Missing values: What is the required behaviour when SkiBusStopDistance or TownDistanceMinutes is NULL? Should the corresponding card be hidden, display an alternative message, or use another field?
+4. Exactly four highlights: Are four cards mandatory for every property, or is the count a maximum depending on available/applicable data?
+5. Short-distance copy: Should the under-six-minute message exactly read “You're in the centre”? Villa Cary currently shows “In Resort Centre”.
+
+These questions are intended to settle acceptance criteria; they are not assertions about who implemented the underlying logic.
+
+──────────────────────────────────────────────────────────────────
+8. REMAINING COVERAGE / NEXT TEST ACTIONS
+──────────────────────────────────────────────────────────────────
+
+• Resolve the questions above with the PO and/or developers, then rerun Club Med (transfers not included), Rodella (>1,000 m with bus-stop data), and Petit Pont (>1,000 m without bus-stop data).
+• Test a resort not marked Snow Sure and confirm the correct alternative heading/height/cannon presentation.
+• Test Ski-in only and Ski-out only separately, rather than relying exclusively on combined Ski-in/Ski-out examples.
+• Verify a transfer-not-included offer with a confirmed resort fallback duration, if such a scenario is in scope.
+• Attach UI and database screenshots to the Jira work items and record the expected-versus-actual outcome for each rerun.
+
+──────────────────────────────────────────────────────────────────
+9. SUGGESTED CONCISE JIRA COMMENT (UK ENGLISH)
+──────────────────────────────────────────────────────────────────
+
+Focus for reviewers: the Transfers case is the clearest written-rule mismatch; the resort-location and missing-data cases require PO clarification before they are called bugs. The wording below preserves this distinction.
+
+    QA Validation — SKIP-2171 / SKIP-2301 | Staging
+    Five property offers were reviewed, including database comparisons. Snow, ski access and included-transfer scenarios were observed working as expected.
+    
+    Outstanding findings (linked to the ticket requirements):
+    - Club Med Les Arcs Panorama (Property 36707 / Holiday 203290784): SKIP-2171 states “IF No transfer is included THEN show 'Not included'” and requires the shortest resort transfer time. The offer shows “Transfers & Flights: Not included”, but no Transfers highlight or fallback time appears (2/4 cards). Please confirm whether this rule also covers accommodation-only offers.
+    - Rodella Hotel (Property 2549 / Holiday 158518187): SKIP-2171 states “IF the walk is over 1000m THEN distance to bus stop is shown instead” under Resort Centre Location. SQL confirms 1,200 m to the centre and a 10 m bus stop, but the bus-stop information appears only under Ski Access; Resort Location is absent (3/4 cards). Please clarify the intended placement.
+    - Apartment Petit Pont (Property 33586 / Holiday 127580406): SKIP-2301 specifies “4 primary highlights for property page displayed”, whereas 1/4 appears. SQL records 1,100 m to the centre and NULL for the bus-stop distance; the expected missing-data behaviour is not stated.
+    
+    Result: IN TEST — clarification required before PASS. SKIP-2301 specifies four highlights; please confirm whether the full set is mandatory when data or services are unavailable. Other conditional variants have not yet been fully tested.
+
+Report limitations: UI observations, SQL screenshots and Jira text available in this QA session only. No exporter, API payload, network trace or application implementation was independently inspected for these tickets. SQL results do not establish which service populated the frontend. No SQL mutation is included or recommended in this report.
