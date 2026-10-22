@@ -1,0 +1,17 @@
+**QA Validation — SKIP-2171 / SKIP-2301 | Staging**
+
+Five properties were tested, with supporting database checks. Snow information, ski access and included transfers behaved as expected in the scenarios tested.
+
+**Outstanding findings against the ticket requirements:**
+
+- **Club Med (Property 36707 / Holiday 203290784):** SKIP-2171 specifies **“IF No transfer is included THEN show 'Not included'”** and requires the shortest resort transfer time. The offer states “Transfers & Flights: Not included”, but the Transfers highlight and alternative duration are absent (**2/4 highlights**).
+
+- **Rodella Hotel (Property 2549 / Holiday 158518187):** SKIP-2171 specifies **“IF the walk is over 1000m THEN distance to bus stop is shown instead”**. SQL confirms 1,200m to the centre and a 10m bus-stop distance. However, this information appears under Ski Access, while Resort Location is absent (**3/4 highlights**).
+
+- **Apartment Petit Pont (Property 33586 / Holiday 127580406):** SKIP-2301 specifies **“4 primary highlights for property page displayed”**. Only **1/4** is visible. The bus-stop distance is NULL, and the expected fallback behaviour is unclear.
+
+**Result: IN TEST — Clarification required before PASS.**
+
+Please confirm whether four highlights are mandatory when data is unavailable, how the over-1,000m fallback should be presented, and whether the Transfers rule applies to accommodation-only offers.
+
+Supporting SQL queries and test evidence are documented in the attached QA report.
