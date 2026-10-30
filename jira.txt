@@ -1,9 +1,15 @@
 USE [Ski];
 
-SELECT TOP (10) TouristTax
-FROM dbo.SupplierPriceAvailable
-WHERE TouristTax IS NOT NULL;
-
-SELECT TOP (10) TouristTax
+SELECT
+    ResortId,
+    SupplierCode,
+    COUNT(*) AS TotalRecords,
+    COUNT(TouristTax) AS WithTouristTax,
+    COUNT(*) - COUNT(TouristTax) AS WithoutTouristTax,
+    MIN(TouristTax) AS MinTouristTax,
+    MAX(TouristTax) AS MaxTouristTax
 FROM dbo.OptimisedSearch
-WHERE TouristTax IS NOT NULL;
+WHERE ResortId IN (1601, 1602, 1603, 1941, 25598)
+  AND SupplierCode = 'KAL'
+GROUP BY ResortId, SupplierCode
+ORDER BY ResortId;
