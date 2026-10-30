@@ -1,16 +1,9 @@
-Continua a validação do SKIP-2389 a partir do último ponto, aproveitando os resultados e evidências já obtidos.
+O relatório final do SKIP-2389 está bastante completo. Vamos fechar apenas a cobertura pendente de Equipment Rental.
 
-Antes de executar, confirma se o Staging está novamente disponível.
+Executa um teste específico em Staging que altere o preço do aluguer de equipamento em sessionStorage e confirme que o montante autorizado pelo servidor não é reduzido.
 
-Prioriza apenas as verificações pendentes:
+Utiliza 1 worker e tentativas limitadas. Não submetas nenhum pagamento real nem alteres o código da aplicação.
 
-1. Validar se o servidor rejeita ou recalcula valores "depositPounds" manipulados em "POST /payment".
-2. Confirmar que uma doação legítima funciona normalmente, sem manipulação.
+Apresenta o preço legítimo, o preço manipulado, o valor devolvido pelo servidor e o resultado PASS/FAIL/BLOCKED, com evidências.
 
-Executa os testes sequencialmente, com apenas 1 worker e tentativas limitadas. Não repitas os cenários já validados, salvo necessidade técnica.
-
-Não submetas pagamentos reais nem alteres o código da aplicação.
-
-No final, apresenta os resultados PASS, FAIL ou BLOCKED de cada cenário, com evidências. Distingue claramente falhas do ambiente de possíveis defeitos da aplicação.
-
-Não declares o ticket totalmente aprovado enquanto existirem critérios sem validação.
+Não repitas os cenários já concluídos
