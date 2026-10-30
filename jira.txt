@@ -1,17 +1,10 @@
-SELECT DISTINCT
+SELECT TOP (30)
     ResortId,
-    PropertyID,
-    PropertyName,
-    PropertyTypeCode,
-    Rating,
-    CountryCode,
-    SupplierCode,
-    TouristTax
-FROM Ski.dbo.OptimisedSearch
-WHERE SupplierCode = 'KAL'
-  AND ResortId IN (1605, 3306)
-ORDER BY ResortId, PropertyID;
-
-SELECT *
+    Name,
+    AccommodationClassificationTypeId,
+    AccommodationClassification,
+    TouristTaxRate,
+    CurrencyCode
 FROM Ski.dbo.TouristTax
-WHERE ResortId IN (1605, 3306);
+WHERE AccommodationClassificationTypeId NOT IN (1, 3)
+ORDER BY ResortId;
