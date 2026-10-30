@@ -1,13 +1,11 @@
-GET /holiday,holiday_v1_0_1/_search
-{
-  "size": 10,
-  "_source": [
-    "touristTax",
-    "supplierPriceAvailableId"
-  ],
-  "query": {
-    "exists": {
-      "field": "touristTax"
-    }
-  }
-}
+USE [Ski];
+
+SELECT
+    SupplierPriceAvailableId,
+    TouristTax
+FROM dbo.OptimisedSearch
+WHERE SupplierPriceAvailableId IN (
+    201704642,
+    201704658,
+    201704665
+);
