@@ -1,15 +1,13 @@
-USE [Ski];
-
-SELECT
+SELECT TOP (50)
     ResortId,
+    MainResortId,
+    PropertyID,
+    PropertyName,
+    Rating,
+    CountryCode,
     SupplierCode,
-    COUNT(*) AS TotalRecords,
-    COUNT(TouristTax) AS WithTouristTax,
-    COUNT(*) - COUNT(TouristTax) AS WithoutTouristTax,
-    MIN(TouristTax) AS MinTouristTax,
-    MAX(TouristTax) AS MaxTouristTax
-FROM dbo.OptimisedSearch
+    TouristTax
+FROM Ski.dbo.OptimisedSearch
 WHERE ResortId IN (1601, 1602, 1603, 1941, 25598)
   AND SupplierCode = 'KAL'
-GROUP BY ResortId, SupplierCode
-ORDER BY ResortId;
+ORDER BY ResortId, PropertyID;
