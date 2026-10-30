@@ -1,10 +1,26 @@
-SELECT TOP (30)
-    ResortId,
-    Name,
-    AccommodationClassificationTypeId,
-    AccommodationClassification,
-    TouristTaxRate,
-    CurrencyCode
-FROM Ski.dbo.TouristTax
-WHERE AccommodationClassificationTypeId NOT IN (1, 3)
-ORDER BY ResortId;
+SELECT DISTINCT TOP (30)
+    o.ResortId,
+    o.PropertyID,
+    o.PropertyName,
+    o.SupplierCode,
+    o.PropertyTypeCode,
+    o.Rating,
+    o.TouristTax AS ActualGBP,
+    t.TouristTaxRate AS ExpectedEUR,
+    CAST(
+        ROUND(t.TouristTaxRate / 1.12490, 2)
+        AS DECIMAL(10,2)
+    ) AS ExpectedGBP
+FROM Ski.dbo.OptimisedSearch o
+INNER JOIN Ski.dbo.TouristTax t
+    ON o.ResortId = t.ResortId
+    AND o.PropertyTypeCode = t.AccommodationClassification
+WHERE o.SupplierCode = 'KAL'
+  AND t.AccommodationClassificationTypeId = 2
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Ski.dbo.TouristTax a
+      WHERE a.ResortId = o.ResortId
+        AND a.AccommodationClassificationTypeId = 3
+  )
+ORDER BY o.ResortId, o.PropertyID;
