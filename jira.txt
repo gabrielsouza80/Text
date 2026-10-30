@@ -13,3 +13,13 @@ WHERE SupplierPriceAvailableId IN (
     201704658,
     201704665
 );
+
+QA Validation — In Progress
+
+Confirmed that the "touristTax" field is available in OpenSearch and populated in the exported documents.
+
+However, the values currently differ from those returned by SQL Server (4.44 in SQL versus 1 and 2 in OpenSearch for the records checked).
+
+The exporter may need to be rerun. Awaiting confirmation before retesting.
+
+Result: In Progress — Pending exporter refresh.
