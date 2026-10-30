@@ -1,12 +1,11 @@
-USE [Ski];
-
-SELECT DISTINCT
+SELECT TOP (20)
+    SupplierPriceAvailableId,
     ResortId,
     PropertyID,
     PropertyName,
     SupplierCode,
     TouristTax
-FROM dbo.OptimisedSearch
+FROM Ski.dbo.OptimisedSearch
 WHERE SupplierCode = 'KAL'
   AND ResortId IN (1605, 3306)
   AND TouristTax IS NOT NULL
