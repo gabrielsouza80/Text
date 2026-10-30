@@ -1,13 +1,17 @@
-SELECT TOP (50)
+SELECT DISTINCT
     ResortId,
-    MainResortId,
     PropertyID,
     PropertyName,
+    PropertyTypeCode,
     Rating,
     CountryCode,
     SupplierCode,
     TouristTax
 FROM Ski.dbo.OptimisedSearch
-WHERE ResortId IN (1601, 1602, 1603, 1941, 25598)
-  AND SupplierCode = 'KAL'
+WHERE SupplierCode = 'KAL'
+  AND ResortId IN (1605, 3306)
 ORDER BY ResortId, PropertyID;
+
+SELECT *
+FROM Ski.dbo.TouristTax
+WHERE ResortId IN (1605, 3306);
