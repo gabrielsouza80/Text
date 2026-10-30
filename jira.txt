@@ -1,16 +1,104 @@
-SELECT DISTINCT TOP (30)
+USE [Ski];
+
+SELECT DISTINCT
     o.ResortId,
     o.PropertyID,
     o.PropertyName,
     o.SupplierCode,
-    o.PropertyTypeCode,
     o.Rating,
-    o.TouristTax AS ActualGBP,
     t.AccommodationClassification,
-    t.TouristTaxRate AS ExpectedEUR
-FROM Ski.dbo.OptimisedSearch o
-INNER JOIN Ski.dbo.TouristTax t
+    t.TouristTaxRate AS ExpectedEUR,
+    ROUND(t.TouristTaxRate / 1.12490, 2) AS ExpectedGBP,
+    o.TouristTax AS ActualGBP,
+    CASE
+        WHEN o.TouristTax =
+             ROUND(t.TouristTaxRate / 1.12490, 2)
+        THEN 'PASS'
+        ELSE 'FAIL'
+    END AS TestResult
+FROM dbo.OptimisedSearch o
+INNER JOIN dbo.TouristTax t
     ON o.ResortId = t.ResortId
 WHERE o.SupplierCode = 'KAL'
-  AND t.AccommodationClassificationTypeId = 2
+  AND (
+      (
+          o.ResortId = 1605
+          AND o.PropertyID = 36375
+          AND t.AccommodationClassificationTypeId = 1
+          AND t.AccommodationClassification = '3'
+      )
+      OR
+      (
+          o.ResortId = 3306
+          AND o.PropertyID = 32471
+          AND t.AccommodationClassificationTypeId = 3
+          AND t.AccommodationClassification = 'All'
+      )
+  )
 ORDER BY o.ResortId, o.PropertyID;
+
+QA Validation | Staging — SKIP-2348
+
+Validated tourist tax values in the "OptimisedSearch" table against the "TouristTax" reference data.
+
+- Le Merilys (Resort 1605): €1.87 for a 3-star property → £1.66.
+- Chalet Frieda (Resort 3306): €5.00 under the "All" classification → £4.44.
+- Both values are consistent with the supplied currency conversion rate.
+
+Result: PASS — Tourist tax values successfully imported and validated for the scenarios tested.
+
+QA Validation | Staging — SKIP-2349
+
+Database validation completed.
+
+- Confirmed the "TouristTax" column exists in both "SupplierPriceAvailable" and "OptimisedSearch" as "DECIMAL(5,2)".
+- Verified that all three required stored procedures reference "TouristTax":
+  - "SupplierPriceAvailableCreate"
+  - "OptimisedSearchUpdateOrInsert"
+  - "MergeTempTableWithSupplierPriceAvailable"
+- Confirmed populated tourist tax values in both database tables.
+
+Result: PASS — Database schema and stored procedure changes verified.
+
+Note: Validation was based on database inspection and sample data checks, rather than exhaustive execution of every stored procedure path.
+
+USE [Ski];
+
+-- TEST 1: Confirmar as colunas TouristTax
+SELECT
+    TABLE_NAME,
+    COLUMN_NAME,
+    DATA_TYPE,
+    NUMERIC_PRECISION,
+    NUMERIC_SCALE,
+    IS_NULLABLE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME IN (
+    'SupplierPriceAvailable',
+    'OptimisedSearch'
+)
+AND COLUMN_NAME = 'TouristTax'
+ORDER BY TABLE_NAME;
+
+
+-- TEST 2: Confirmar as stored procedures
+SELECT
+    s.name AS SchemaName,
+    p.name AS ProcedureName,
+    p.modify_date AS LastModified,
+    CASE
+        WHEN m.definition LIKE '%TouristTax%'
+        THEN 'PASS'
+        ELSE 'NOT VERIFIED'
+    END AS TestResult
+FROM sys.procedures p
+INNER JOIN sys.schemas s
+    ON p.schema_id = s.schema_id
+LEFT JOIN sys.sql_modules m
+    ON p.object_id = m.object_id
+WHERE p.name IN (
+    'SupplierPriceAvailableCreate',
+    'OptimisedSearchUpdateOrInsert',
+    'MergeTempTableWithSupplierPriceAvailable'
+)
+ORDER BY p.name;
