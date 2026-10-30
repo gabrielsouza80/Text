@@ -1,61 +1,16 @@
-Final QA Verification — SKIP-2389
+Continua a validação do SKIP-2389 a partir do último ponto, aproveitando os resultados e evidências já obtidos.
 
-Estamos na validação do ticket SKIP-2389 — Online Booking > Check payment prices against server-side stored values.
+Antes de executar, confirma se o Staging está novamente disponível.
 
-Os testes anteriores em Staging indicaram proteção contra alterações de preços no "sessionStorage", incluindo preço do quarto, pacote, depósito, extras (lift pass), descontos, donativos e valor final.
+Prioriza apenas as verificações pendentes:
 
-Antes de fechar o ticket, realiza uma auditoria final independente, utilizando o código, os testes Playwright e as evidências reais.
+1. Validar se o servidor rejeita ou recalcula valores "depositPounds" manipulados em "POST /payment".
+2. Confirmar que uma doação legítima funciona normalmente, sem manipulação.
 
-1. Verificar "depositPounds"
+Executa os testes sequencialmente, com apenas 1 worker e tentativas limitadas. Não repitas os cenários já validados, salvo necessidade técnica.
 
-Foi identificado o campo "depositPounds" no payload de "POST /payment".
+Não submetas pagamentos reais nem alteres o código da aplicação.
 
-- Confirma se representa um valor financeiro enviado pelo cliente.
-- Verifica se o servidor recalcula e valida esse valor independentemente.
-- Avalia se o comportamento cumpre o AC: "The client sends selections (IDs and choices), never prices."
-- Não consideres este critério aprovado apenas porque o servidor mantém o valor correto.
+No final, apresenta os resultados PASS, FAIL ou BLOCKED de cada cenário, com evidências. Distingue claramente falhas do ambiente de possíveis defeitos da aplicação.
 
-2. Verificar o cenário de donativo
-
-O teste anterior indicou que o formulário de pagamento não carregou após a alteração de "donationPence".
-
-- Confirma se o bloqueio foi uma resposta intencional da validação do servidor.
-- Distingue proteção de segurança de erro funcional ou falha de carregamento.
-- Compara com o comportamento sem manipulação.
-
-3. Rever a cobertura dos Acceptance Criteria
-
-Confirma individualmente a proteção de:
-
-- Package price
-- Deposit
-- Extras (incluindo equipment rental, se disponível)
-- Discounts
-- Donation
-- Final amount to charge
-- Client sending selections instead of trusting client-side prices
-
-Para cada item, apresenta a evidência observada e classifica como PASS, FAIL ou NOT VERIFIED.
-
-4. Restrições
-
-- Utiliza exclusivamente Staging.
-- Não efetues pagamentos reais.
-- Não alteres código de produção nem implementes correções.
-- Podes acrescentar ou ajustar testes Playwright na suite existente, quando necessário.
-- Não inventes resultados nem consideres testes aprovados apenas porque passaram no Playwright.
-- Se algum critério exigir uma operação de pagamento que não possa ser executada em segurança, identifica-o como não verificado.
-
-5. Resultado esperado
-
-Apresenta um relatório final conciso contendo:
-
-1. Testes executados e respetivos resultados.
-2. Evidências de validação do lado do servidor.
-3. Confirmação do comportamento de "depositPounds".
-4. Conclusão sobre o cenário de donativo.
-5. Cobertura de cada Acceptance Criterion.
-6. Limitações e testes ainda pendentes.
-7. Recomendação fundamentada: PASS, FAIL ou IN TEST.
-
-Não declares o ticket totalmente aprovado sem evidência suficiente para todos os Acceptance Criteria.
+Não declares o ticket totalmente aprovado enquanto existirem critérios sem validação.
