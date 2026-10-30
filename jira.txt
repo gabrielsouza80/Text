@@ -2,6 +2,10 @@ USE [Ski];
 
 SELECT
     SupplierPriceAvailableId,
+    ResortId,
+    PropertyID,
+    PropertyName,
+    SupplierCode,
     TouristTax
 FROM dbo.OptimisedSearch
 WHERE SupplierPriceAvailableId IN (
