@@ -1,56 +1,9 @@
 USE [Ski];
 
-SELECT
-    TABLE_NAME,
-    COLUMN_NAME,
-    DATA_TYPE,
-    NUMERIC_PRECISION,
-    NUMERIC_SCALE,
-    IS_NULLABLE
-FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME IN (
-    'SupplierPriceAvailable',
-    'OptimisedSearch'
-)
-AND COLUMN_NAME = 'TouristTax'
-ORDER BY TABLE_NAME;
+SELECT TOP (10) TouristTax
+FROM dbo.SupplierPriceAvailable
+WHERE TouristTax IS NOT NULL;
 
-
-
-USE [Ski];
-
-SELECT
-    s.name AS SchemaName,
-    p.name AS ProcedureName,
-    p.modify_date AS LastModified,
-    CASE
-        WHEN m.definition IS NULL THEN 'DEFINITION NOT VISIBLE'
-        WHEN m.definition LIKE '%TouristTax%' THEN 'YES'
-        ELSE 'NO'
-    END AS ReferencesTouristTax
-FROM sys.procedures p
-INNER JOIN sys.schemas s
-    ON p.schema_id = s.schema_id
-LEFT JOIN sys.sql_modules m
-    ON p.object_id = m.object_id
-WHERE p.name IN (
-    'SupplierPriceAvailableCreate',
-    'OptimisedSearchUpdateOrInsert',
-    'MergeTempTableWithSupplierPriceAvailable'
-)
-ORDER BY p.name;
-
-
-
-SELECT TOP (50)
-    ResortId,
-    MainResortId,
-    PropertyID,
-    PropertyName,
-    Rating,
-    CountryCode,
-    TouristTax
-FROM Ski.dbo.OptimisedSearch
-WHERE ResortId IN (1601, 1602, 1603, 1941, 25598)
-   OR MainResortId IN (1601, 1602, 1603, 1941, 25598)
-ORDER BY ResortId, PropertyID;
+SELECT TOP (10) TouristTax
+FROM dbo.OptimisedSearch
+WHERE TouristTax IS NOT NULL;
