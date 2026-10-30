@@ -1,9 +1,56 @@
-O relatório final do SKIP-2389 está bastante completo. Vamos fechar apenas a cobertura pendente de Equipment Rental.
+USE [Ski];
 
-Executa um teste específico em Staging que altere o preço do aluguer de equipamento em sessionStorage e confirme que o montante autorizado pelo servidor não é reduzido.
+SELECT
+    TABLE_NAME,
+    COLUMN_NAME,
+    DATA_TYPE,
+    NUMERIC_PRECISION,
+    NUMERIC_SCALE,
+    IS_NULLABLE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME IN (
+    'SupplierPriceAvailable',
+    'OptimisedSearch'
+)
+AND COLUMN_NAME = 'TouristTax'
+ORDER BY TABLE_NAME;
 
-Utiliza 1 worker e tentativas limitadas. Não submetas nenhum pagamento real nem alteres o código da aplicação.
 
-Apresenta o preço legítimo, o preço manipulado, o valor devolvido pelo servidor e o resultado PASS/FAIL/BLOCKED, com evidências.
 
-Não repitas os cenários já concluídos
+USE [Ski];
+
+SELECT
+    s.name AS SchemaName,
+    p.name AS ProcedureName,
+    p.modify_date AS LastModified,
+    CASE
+        WHEN m.definition IS NULL THEN 'DEFINITION NOT VISIBLE'
+        WHEN m.definition LIKE '%TouristTax%' THEN 'YES'
+        ELSE 'NO'
+    END AS ReferencesTouristTax
+FROM sys.procedures p
+INNER JOIN sys.schemas s
+    ON p.schema_id = s.schema_id
+LEFT JOIN sys.sql_modules m
+    ON p.object_id = m.object_id
+WHERE p.name IN (
+    'SupplierPriceAvailableCreate',
+    'OptimisedSearchUpdateOrInsert',
+    'MergeTempTableWithSupplierPriceAvailable'
+)
+ORDER BY p.name;
+
+
+
+SELECT TOP (50)
+    ResortId,
+    MainResortId,
+    PropertyID,
+    PropertyName,
+    Rating,
+    CountryCode,
+    TouristTax
+FROM Ski.dbo.OptimisedSearch
+WHERE ResortId IN (1601, 1602, 1603, 1941, 25598)
+   OR MainResortId IN (1601, 1602, 1603, 1941, 25598)
+ORDER BY ResortId, PropertyID;
