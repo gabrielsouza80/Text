@@ -1,12 +1,13 @@
-SELECT TOP (20)
-    SupplierPriceAvailableId,
-    ResortId,
-    PropertyID,
-    PropertyName,
-    SupplierCode,
-    TouristTax
-FROM Ski.dbo.OptimisedSearch
-WHERE SupplierCode = 'KAL'
-  AND ResortId IN (1605, 3306)
-  AND TouristTax IS NOT NULL
-ORDER BY ResortId, PropertyID;
+GET /holiday,holiday_v1_0_1/_search
+{
+  "size": 10,
+  "_source": [
+    "touristTax",
+    "supplierPriceAvailableId"
+  ],
+  "query": {
+    "exists": {
+      "field": "touristTax"
+    }
+  }
+}
