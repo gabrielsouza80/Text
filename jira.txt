@@ -1,25 +1,45 @@
-USE [Ski];
+Boas, Giovani!
 
-SELECT
-    SupplierPriceAvailableId,
-    ResortId,
-    PropertyID,
-    PropertyName,
-    SupplierCode,
-    TouristTax
-FROM dbo.OptimisedSearch
-WHERE SupplierPriceAvailableId IN (
-    201704642,
-    201704658,
-    201704665
-);
+Estive a testar o SKIP-2401 com o Club Med Val Thorens Sensations nos dois fluxos.
 
-QA Validation — In Progress
+No Online Booking antigo, consegui selecionar o quarto, avançar para Travel Options e regressar mantendo a seleção e o preço. No entanto, também ocorreu um erro de Session Expired.
 
-Confirmed that the "touristTax" field is available in OpenSearch and populated in the exported documents.
+No Online Booking novo, consegui chegar ao Payment, mas apareceu o erro "We couldn't process your payment".
 
-However, the values currently differ from those returned by SQL Server (4.44 in SQL versus 1 and 2 in OpenSearch for the records checked).
+Confirmei que a release 657-SKIP-2401 está em Staging.
 
-The exporter may need to be rerun. Awaiting confirmation before retesting.
+Sabes se estes erros poderão estar relacionados com o ambiente? E como posso verificar quantas vezes o "getproposal" é chamado ao Club Med? Não consigo confirmar isso apenas pela Network do browser.
 
-Result: In Progress — Pending exporter refresh.
+Vou manter o ticket IN TEST enquanto investigamos estas situações.
+
+Obrigado!
+
+QA Validation — In Progress (02/11/2026)
+
+Tested Club Med Val Thorens Sensations (Holiday ID: 206388416) in Staging.
+
+Old Online Booking:
+
+- Successfully confirmed 2 adults and retrieved available room options.
+- Selected the Deluxe Room and proceeded to Travel Options.
+- Verified HTTP 200 responses for "peopleallocationrooms", "gototravel" and "get-travel".
+- Confirmed that room selection and pricing (£5,210 total) were preserved when navigating back.
+- However, a Session Expired error was also encountered ("/error/sessionexpirederror").
+
+New Online Booking:
+
+- Successfully reached the Payment step.
+- The application displayed: "We couldn't process your payment."
+- The payment flow could not be completed successfully.
+
+Deployment:
+
+- Release "657-SKIP-2401" confirmed in Staging.
+
+Outstanding:
+
+- Confirm whether the observed errors are related to Staging or the application.
+- Verify through backend logs that Club Med "getproposal" requests are not duplicated.
+- Retest any affected booking steps after the errors are investigated.
+
+QA Result: IN TEST — Functional checks partially passed, but errors were encountered in both booking flows. The main acceptance criterion remains unverified.
