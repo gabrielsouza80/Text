@@ -1,32 +1,111 @@
 (() => {
-  const script = document.querySelector(
-    'script[type="application/ld+json"]'
-  );
+  const scripts = [
+    ...document.querySelectorAll('script[type="application/ld+json"]')
+  ];
 
-  if (!script) return { error: "JSON-LD not found" };
+  const results = [];
 
-  const data = JSON.parse(script.textContent);
-  const graph = data["@graph"] || [];
+  if (!scripts.length) {
+    return { result: "FAIL", reason: "No JSON-LD scripts found" };
+  }
 
-  const trip = graph.find(x => x["@type"] === "TouristTrip");
-  const hotel = graph.find(x => x["@type"] === "LodgingBusiness");
+  for (let index = 0; index < scripts.length; index++) {
+    try {
+      const data = JSON.parse(scripts[index].textContent);
+      const graph = Array.isArray(data["@graph"])
+        ? data["@graph"]
+        : [data];
 
-  return {
-    touristTrip: {
-      exists: !!trip,
-      name: trip?.name,
-      departureTime: trip?.departureTime,
-      price: trip?.offers?.price,
-      currency: trip?.offers?.priceCurrency,
-      availability: trip?.offers?.availability,
-      hasFlight: !!trip?.subTrip,
-      hasItinerary: !!trip?.itinerary
-    },
-    lodgingBusiness: {
-      exists: !!hotel,
-      name: hotel?.name,
-      country: hotel?.address?.addressCountry,
-      amenitiesCount: hotel?.amenityFeature?.length
+      const trip = graph.find(x => x["@type"] === "TouristTrip");
+      const hotel = graph.find(x => x["@type"] === "LodgingBusiness");
+
+      const offer = Array.isArray(trip?.offers)
+        ? trip.offers[0]
+        : trip?.offers;
+
+      const flights = (Array.isArray(trip?.subTrip)
+        ? trip.subTrip
+        : [trip?.subTrip]
+      ).filter(Boolean);
+
+      const flight = flights.find(x => x["@type"] === "Flight");
+
+      const itinerary = trip?.itinerary;
+      const items = itinerary?.itemListElement || [];
+
+      const amenities = hotel?.amenityFeature || [];
+
+      const checks = [
+        ["Valid JSON-LD", true],
+        ["Schema.org context", data["@context"] === "https://schema.org"],
+        ["TouristTrip exists", !!trip],
+        ["LodgingBusiness exists", !!hotel],
+        ["Offer exists", offer?.["@type"] === "Offer"],
+        ["Price matches page", Number(offer?.price) === 768],
+        ["Currency GBP", offer?.priceCurrency === "GBP"],
+        ["Departure date", trip?.departureTime === "2027-01-09"],
+        ["Flight structure", !!flight],
+        ["Departure airport BFS", flight?.departureAirport?.iataCode === "BFS"],
+        ["Arrival airport SZG", flight?.arrivalAirport?.iataCode === "SZG"],
+        ["Itinerary is ItemList", itinerary?.["@type"] === "ItemList"],
+        ["Itinerary has items", items.length > 0],
+        ["Hotel name", hotel?.name === "Pension Nordstern"],
+        ["Hotel country AT", hotel?.address?.addressCountry === "AT"],
+        ["Amenities exist", amenities.length > 0],
+        ["Amenities have names", amenities.every(a => !!a.name)],
+        ["All graph nodes have types", graph.every(x => !!x["@type"])]
+      ];
+
+      const failed = checks.filter(x => !x[1]).map(x => x[0]);
+
+      const report = {
+        scriptIndex: index,
+        basicChecksPassed: checks.length - failed.length,
+        basicChecksTotal: checks.length,
+        failedChecks: failed,
+        flight: {
+          type: flight?.["@type"],
+          departure: flight?.departureAirport?.iataCode,
+          arrival: flight?.arrivalAirport?.iataCode
+        },
+        itinerary: {
+          type: itinerary?.["@type"],
+          itemCount: items.length
+        },
+        offer: {
+          price: offer?.price,
+          currency: offer?.priceCurrency,
+          availability: offer?.availability
+        },
+        accommodation: {
+          name: hotel?.name,
+          country: hotel?.address?.addressCountry,
+          amenities: amenities.map(a => a.name)
+        },
+        technicalResult: failed.length
+          ? "REVIEW REQUIRED"
+          : "PASS - BASIC STRUCTURE",
+        fullSchemaOrgValidation: "NOT VERIFIED",
+        aimeeApproval: "NOT VERIFIED"
+      };
+
+      console.table(
+        checks.map(([check, passed]) => ({
+          check,
+          result: passed ? "PASS" : "REVIEW"
+        }))
+      );
+
+      results.push(report);
+    } catch (error) {
+      results.push({
+        scriptIndex: index,
+        technicalResult: "FAIL - INVALID JSON",
+        error: error.message
+      });
     }
-  };
+  }
+
+  console.log("SKIP-2247 CONSOLIDATED QA RESULT", results);
+  return results;
 })()
