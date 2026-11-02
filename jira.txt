@@ -1,111 +1,27 @@
-(() => {
-  const scripts = [
-    ...document.querySelectorAll('script[type="application/ld+json"]')
-  ];
+QA Validation — Partial PASS (02/11/2026)
 
-  const results = [];
+Tested the Property Page schema in Staging using Pension Nordstern, Mayrhofen, against the revised schema document.
 
-  if (!scripts.length) {
-    return { result: "FAIL", reason: "No JSON-LD scripts found" };
-  }
+Validation Results:
 
-  for (let index = 0; index < scripts.length; index++) {
-    try {
-      const data = JSON.parse(scripts[index].textContent);
-      const graph = Array.isArray(data["@graph"])
-        ? data["@graph"]
-        : [data];
+- JSON-LD successfully found and parsed.
+- "@context": "https://schema.org".
+- "@graph" contains "TouristTrip" and "LodgingBusiness".
+- "Offer" includes price (£768.00), currency (GBP) and InStock availability.
+- Departure date (09/01/2027) matches the selected holiday.
+- Flight information includes Belfast International (BFS) to Salzburg (SZG).
+- Itinerary is structured as an "ItemList" containing one item.
+- Accommodation name, location (Austria) and 7 amenities were verified.
+- Price and departure details match the information displayed on the page.
 
-      const trip = graph.find(x => x["@type"] === "TouristTrip");
-      const hotel = graph.find(x => x["@type"] === "LodgingBusiness");
+Technical Results:
 
-      const offer = Array.isArray(trip?.offers)
-        ? trip.offers[0]
-        : trip?.offers;
+- 18/18 basic checks PASSED.
+- 0 failed checks.
+- No issues identified in the tested JSON-LD structure and data.
 
-      const flights = (Array.isArray(trip?.subTrip)
-        ? trip.subTrip
-        : [trip?.subTrip]
-      ).filter(Boolean);
+Pending Confirmation:
 
-      const flight = flights.find(x => x["@type"] === "Flight");
+Could the developer please confirm whether "Property Page schema > Revised" has been reviewed and approved by Aimee as the final reference for this ticket?
 
-      const itinerary = trip?.itinerary;
-      const items = itinerary?.itemListElement || [];
-
-      const amenities = hotel?.amenityFeature || [];
-
-      const checks = [
-        ["Valid JSON-LD", true],
-        ["Schema.org context", data["@context"] === "https://schema.org"],
-        ["TouristTrip exists", !!trip],
-        ["LodgingBusiness exists", !!hotel],
-        ["Offer exists", offer?.["@type"] === "Offer"],
-        ["Price matches page", Number(offer?.price) === 768],
-        ["Currency GBP", offer?.priceCurrency === "GBP"],
-        ["Departure date", trip?.departureTime === "2027-01-09"],
-        ["Flight structure", !!flight],
-        ["Departure airport BFS", flight?.departureAirport?.iataCode === "BFS"],
-        ["Arrival airport SZG", flight?.arrivalAirport?.iataCode === "SZG"],
-        ["Itinerary is ItemList", itinerary?.["@type"] === "ItemList"],
-        ["Itinerary has items", items.length > 0],
-        ["Hotel name", hotel?.name === "Pension Nordstern"],
-        ["Hotel country AT", hotel?.address?.addressCountry === "AT"],
-        ["Amenities exist", amenities.length > 0],
-        ["Amenities have names", amenities.every(a => !!a.name)],
-        ["All graph nodes have types", graph.every(x => !!x["@type"])]
-      ];
-
-      const failed = checks.filter(x => !x[1]).map(x => x[0]);
-
-      const report = {
-        scriptIndex: index,
-        basicChecksPassed: checks.length - failed.length,
-        basicChecksTotal: checks.length,
-        failedChecks: failed,
-        flight: {
-          type: flight?.["@type"],
-          departure: flight?.departureAirport?.iataCode,
-          arrival: flight?.arrivalAirport?.iataCode
-        },
-        itinerary: {
-          type: itinerary?.["@type"],
-          itemCount: items.length
-        },
-        offer: {
-          price: offer?.price,
-          currency: offer?.priceCurrency,
-          availability: offer?.availability
-        },
-        accommodation: {
-          name: hotel?.name,
-          country: hotel?.address?.addressCountry,
-          amenities: amenities.map(a => a.name)
-        },
-        technicalResult: failed.length
-          ? "REVIEW REQUIRED"
-          : "PASS - BASIC STRUCTURE",
-        fullSchemaOrgValidation: "NOT VERIFIED",
-        aimeeApproval: "NOT VERIFIED"
-      };
-
-      console.table(
-        checks.map(([check, passed]) => ({
-          check,
-          result: passed ? "PASS" : "REVIEW"
-        }))
-      );
-
-      results.push(report);
-    } catch (error) {
-      results.push({
-        scriptIndex: index,
-        technicalResult: "FAIL - INVALID JSON",
-        error: error.message
-      });
-    }
-  }
-
-  console.log("SKIP-2247 CONSOLIDATED QA RESULT", results);
-  return results;
-})()
+QA Result: PARTIAL PASS — All executed checks passed. Final sign-off is pending confirmation of the approved schema specification.
