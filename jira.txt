@@ -1,22 +1,32 @@
-const schemas = [...document.querySelectorAll(
-  'script[type="application/ld+json"]'
-)];
+(() => {
+  const script = document.querySelector(
+    'script[type="application/ld+json"]'
+  );
 
-schemas.map((script, index) => {
-  try {
-    const data = JSON.parse(script.textContent);
-    return {
-      index,
-      validJSON: true,
-      types: (data["@graph"] || [data])
-        .map(item => item["@type"]),
-      context: data["@context"]
-    };
-  } catch (error) {
-    return {
-      index,
-      validJSON: false,
-      error: error.message
-    };
-  }
-});
+  if (!script) return { error: "JSON-LD not found" };
+
+  const data = JSON.parse(script.textContent);
+  const graph = data["@graph"] || [];
+
+  const trip = graph.find(x => x["@type"] === "TouristTrip");
+  const hotel = graph.find(x => x["@type"] === "LodgingBusiness");
+
+  return {
+    touristTrip: {
+      exists: !!trip,
+      name: trip?.name,
+      departureTime: trip?.departureTime,
+      price: trip?.offers?.price,
+      currency: trip?.offers?.priceCurrency,
+      availability: trip?.offers?.availability,
+      hasFlight: !!trip?.subTrip,
+      hasItinerary: !!trip?.itinerary
+    },
+    lodgingBusiness: {
+      exists: !!hotel,
+      name: hotel?.name,
+      country: hotel?.address?.addressCountry,
+      amenitiesCount: hotel?.amenityFeature?.length
+    }
+  };
+})()
