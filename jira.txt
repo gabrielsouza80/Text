@@ -1,27 +1,9 @@
-QA Validation — Partial PASS (02/11/2026)
+Giovani, só para confirmar: o SKIP-2247 é o ticket "Property Page > Page Schema", certo?
 
-Tested the Property Page schema in Staging using Pension Nordstern, Mayrhofen, against the revised schema document.
+No Jira, o critério de aceitação indica que o schema da página deve corresponder ao documento de referência.
 
-Validation Results:
+Foi por isso que validei o JSON-LD da página em Staging e fiz as 18 verificações básicas.
 
-- JSON-LD successfully found and parsed.
-- "@context": "https://schema.org".
-- "@graph" contains "TouristTrip" and "LodgingBusiness".
-- "Offer" includes price (£768.00), currency (GBP) and InStock availability.
-- Departure date (09/01/2027) matches the selected holiday.
-- Flight information includes Belfast International (BFS) to Salzburg (SZG).
-- Itinerary is structured as an "ItemList" containing one item.
-- Accommodation name, location (Austria) and 7 amenities were verified.
-- Price and departure details match the information displayed on the page.
+O endpoint "getbaggageallowance" faz parte deste mesmo ticket ou estás a referir-te a outro?
 
-Technical Results:
-
-- 18/18 basic checks PASSED.
-- 0 failed checks.
-- No issues identified in the tested JSON-LD structure and data.
-
-Pending Confirmation:
-
-Could the developer please confirm whether "Property Page schema > Revised" has been reviewed and approved by Aimee as the final reference for this ticket?
-
-QA Result: PARTIAL PASS — All executed checks passed. Final sign-off is pending confirmation of the approved schema specification.
+Quero garantir que estou a validar os critérios corretos antes de dar o ticket como concluído.
