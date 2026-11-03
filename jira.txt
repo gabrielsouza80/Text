@@ -1,104 +1,175 @@
-Kiro — Integração Datadog para QA e Observabilidade
+QA Validation — SKIP-2405
 
-Quero configurar uma integração segura e reutilizável entre o Kiro e o Datadog, para apoiar os meus testes de Quality Assurance.
+Thread Pool Starvation and Socket Exhaustion
 
-Contexto:
+Act as a Senior QA Automation Engineer, using Playwright where appropriate.
 
-- Trabalho como QA Engineer, realizando testes funcionais, de integração, regressão e automação.
-- Utilizo o Kiro como assistente.
-- A empresa utiliza Datadog APM.
-- Região Datadog: EU1 ("datadoghq.eu").
-- O objetivo inicial é validar o SKIP-2405, relativo a thread pool starvation e socket exhaustion na Ski Online Booking API.
-- Pretendo reutilizar esta integração em futuros tickets, sempre que existam dados de observabilidade relevantes.
+Your task is to validate the functional regression and integration behaviour of the Iglu Ski Old Online Booking flow after the API changes associated with SKIP-2405.
 
-Fase 1 — Configurar a integração
+Environment: https://staging.igluski.com
 
-1. Verifica se existe uma Datadog Power oficial disponível no Kiro e privilegia essa integração.
-2. Como alternativa, utiliza o MCP Server oficial do Datadog:
-   "https://mcp.datadoghq.eu/v1/mcp"
-3. Prefere autenticação OAuth, utilizando o meu acesso empresarial autorizado.
-4. Configura exclusivamente ferramentas de leitura necessárias para APM, logs, traces e métricas.
-5. Não solicites credenciais no chat e não graves segredos em ficheiros, logs ou repositórios.
-6. Não autorizes automaticamente operações de escrita.
-7. Preserva as configurações MCP existentes e não dupliques servidores.
-8. Não instales agentes de monitorização, não alteres a infraestrutura e não modifiques o código da aplicação.
-9. Caso sejam necessárias permissões administrativas ou autorização da empresa, interrompe essa etapa e explica o que devo solicitar.
+Scope: Old Online Booking only. Do not test the redesigned/new booking flow.
 
-Confirma a ligação através de uma consulta mínima e não destrutiva. Não declares sucesso se a autenticação ou o acesso falharem.
+1. Context
 
-Fase 2 — Identificar os serviços
+The ticket aims to fix thread pool starvation and socket exhaustion.
 
-Inspeciona os serviços acessíveis no Datadog e identifica a API relevante no ambiente Staging.
+Related Pull Requests:
 
-Para cada serviço relevante, identifica:
+- #256: Convert DetailsController sync-over-async actions to async.
+- #255: Inject pooled HttpClient into Iglu.Ski.SDK clients.
+- #90: Register Ski SDK clients using IHttpClientFactory.
 
-- Nome exato do serviço e ambiente.
-- Endpoints disponíveis e respetivo volume de pedidos.
-- Latência, incluindo p50, p95 e p99 quando houver volume suficiente.
-- Taxa de erros HTTP 5xx.
-- Timeouts e exceções.
-- Dependências externas e chamadas HTTP.
-- Métricas de CPU, memória, thread pool e conexões, se estiverem instrumentadas.
-- Disponibilidade de traces e logs correlacionados.
+The developer confirmed that QA should use the normal Staging environment and test the old booking flow.
 
-Não inventes métricas nem assumas que um sinal inexistente representa ausência de problemas.
+Do not assume that every PR is merged or deployed. Verify deployment evidence if accessible and report any uncertainty.
 
-Fase 3 — SKIP-2405
+2. Initial assessment
 
-Preparar uma avaliação de regressão funcional e integração no Old Online Booking em Main Staging.
+Before executing tests:
 
-Verificações:
+1. Inspect the available project, testing tools and existing automated tests.
+2. Check whether Staging is accessible.
+3. Determine which booking scenarios can be safely automated.
+4. Reuse existing test infrastructure where possible.
+5. Identify any environmental blockers.
 
-1. Carregamento e consulta de reservas.
-2. Preços e descontos.
-3. Seleção de quartos.
-4. Alteração de número de adultos, crianças e quartos.
-5. Navegação entre etapas da reserva.
-6. Respostas do endpoint AllDetails e respetivas dependências.
-7. Erros, timeouts e sinais de degradação observados no Datadog.
+Do not modify application source code, deploy anything or change infrastructure.
 
-Comparar, quando existirem dados equivalentes, os períodos anteriores e posteriores ao deployment.
+3. Test scenarios
 
-Distinguir:
+TC01 — Booking initialisation
 
-- PASS funcional.
-- FAIL funcional demonstrado.
-- BLOCKED por problemas de ambiente ou ausência de evidências.
-- Resultado técnico de desempenho ainda não comprovado.
+- Open a valid ski holiday in Staging.
+- Start the old Online Booking flow.
+- Verify that accommodation details and availability load correctly.
+- Capture relevant API requests and responses.
 
-Não executar testes de carga ou stress sem autorização explícita. Não realizar reservas pagas nem pagamentos reais.
+TC02 — Accommodation and room selection
 
-Fase 4 — Modelo reutilizável para futuros testes
+- Select a room.
+- Load available room options.
+- Verify the displayed details and pricing.
+- Confirm that navigation to the next stage works.
 
-Propor uma metodologia de observabilidade que possa ser utilizada com outros tickets Jira.
+TC03 — Pricing and discounts
 
-Sempre que possível, correlacionar os testes com:
+- Validate that prices are retrieved correctly.
+- Confirm that discounts are handled consistently when applicable.
+- Check the relevant API requests, especially GetPrice and GetHolidayDiscountRules if used by this flow.
+- Do not assume that HTTP 200 means the business response is correct.
 
-- Identificador do ticket.
-- Ambiente.
-- Serviço.
-- Cenário executado.
-- Data e hora.
-- Identificador da execução.
-- Evidência funcional.
-- Logs e traces relevantes.
-- Métricas antes e depois da execução.
+TC04 — Occupancy changes
 
-Se houver testes Playwright, verificar a viabilidade de Datadog Test Visibility, mas não instalar dependências nem ativar envio de dados sem autorização.
+- Test a valid change in the number of adults or children.
+- Check whether the accommodation options and prices update consistently.
+- Observe whether relevant API requests are triggered.
 
-O Datadog deve funcionar como evidência complementar. Não deve determinar automaticamente se um teste funcional passou.
+TC05 — Navigation and regression
 
-Entrega esperada
+- Advance through the booking stages where safe.
+- Navigate backwards and forwards.
+- Verify that selected data is preserved correctly.
+- Check for unexpected errors or session expiration.
 
-Apresenta:
+TC06 — AllDetails and API integration
 
-1. Estado da conexão: CONNECTED, BLOCKED ou NOT CONFIGURED.
-2. Método utilizado e permissões efetivas.
-3. Serviços de Staging identificados.
-4. Métricas realmente disponíveis.
-5. Limitações e riscos de segurança.
-6. Plano de observabilidade do SKIP-2405.
-7. Proposta reutilizável para os restantes testes.
-8. Ações que dependem de autorização.
+- Identify whether AllDetails is called by the old booking flow.
+- If present, inspect method, payload, HTTP status and response time.
+- Compare requests when the occupancy remains unchanged and when it changes.
+- Check for redundant requests, failed requests or long-running calls.
+- Do not assume frontend caching behaviour applies to the old flow without evidence.
 
-Começa pela integração de leitura e pela confirmação do acesso. Não alteres a aplicação ou a infraestrutura.
+TC07 — Stability
+
+- Observe request failures, timeouts and loading problems.
+- Verify that the interface remains responsive during normal usage.
+- Record timings for relevant API calls.
+- Distinguish existing Staging problems from reproducible regressions.
+
+4. Technical acceptance criteria
+
+The Jira acceptance criterion is:
+
+"Thread pool starvation and socket exhaustion fixed."
+
+Separate the validation into two parts:
+
+A. Functional regression
+
+Verify the booking flow continues to work correctly.
+
+B. Backend performance and resource management
+
+Determine whether suitable Datadog metrics, logs or developer-provided evidence are accessible.
+
+Do not claim thread pool starvation or socket exhaustion is fixed based only on browser requests.
+
+If backend evidence is unavailable, report this criterion as NOT VERIFIED.
+
+5. Safety and execution restrictions
+
+- Use Staging only.
+- Do not access Production for testing.
+- Do not submit actual reservations or payments.
+- Do not perform load, stress or concurrency tests without explicit authorisation.
+- Use a maximum of one Playwright worker.
+- Limit retries and avoid unnecessary repeated requests.
+- Do not change application source code.
+- Do not commit, push or deploy changes.
+- Do not bypass authentication or security controls.
+- Do not expose tokens, cookies, passwords or personal data in reports.
+- If browser access or test credentials are unavailable, report BLOCKED rather than inventing results.
+- Temporary QA test scripts are allowed in an isolated working directory, without modifying application repositories.
+
+6. Evidence requirements
+
+For every executed scenario, provide:
+
+- Test ID and description.
+- Exact steps performed.
+- Expected result.
+- Actual result.
+- PASS, FAIL or BLOCKED.
+- Relevant HTTP methods, status codes and response times.
+- Screenshots, traces or sanitised evidence when available.
+- Clear explanation of failures.
+
+Avoid treating an HTTP 200 response as sufficient proof of correct functionality.
+
+7. Final QA report
+
+Produce the report in Portuguese, with:
+
+1. Executive summary.
+2. Staging environment and deployment evidence.
+3. Test execution summary and total counts.
+4. Results for each test case.
+5. Functional regression verdict.
+6. Relevant defects or environmental blockers.
+7. Technical validation of thread pool/socket exhaustion, including what remains unverified.
+8. Evidence locations.
+9. Suggested Jira comment in English.
+10. Clear recommendation: PASS, PARTIAL PASS, FAIL or BLOCKED, supported by evidence.
+
+Never declare the full SKIP-2405 approved unless the complete acceptance criterion is supported.
+
+Start with environment assessment, then execute only safe and relevant regression scenarios.
+
+Verifica se existe uma ligação MCP funcional ao Datadog EU1.
+
+Não alteres configurações, não cries monitores e não executes ações de escrita.
+
+Caso a ligação esteja autorizada e funcional, analisa o serviço relacionado com o SKIP-2405, focando:
+
+- Thread pool starvation.
+- Socket exhaustion.
+- Latência e erros dos endpoints do Online Booking antigo.
+- Traces do AllDetails, GetPrice e GetSuitableRoomsPrices, quando disponíveis.
+- Comparação antes e depois do deployment das alterações relevantes.
+
+Não assumes nomes de serviços nem métricas. Identifica-os através das informações disponíveis.
+
+Apresenta um relatório em português com evidências, períodos analisados, métricas encontradas, limitações e conclusão.
+
+Se não houver métricas suficientes, assinala NOT VERIFIED. Não declares a correção validada sem evidências.
