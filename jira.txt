@@ -1,11 +1,104 @@
-Giovani, obrigado! Vou avançar com os testes no Online Booking antigo em Staging.
+Kiro — Integração Datadog para QA e Observabilidade
 
-Pelo que percebi, a minha validação será principalmente de regressão funcional e integração, para garantir que as alterações na API não introduziram problemas no fluxo de reserva.
+Quero configurar uma integração segura e reutilizável entre o Kiro e o Datadog, para apoiar os meus testes de Quality Assurance.
 
-Vou verificar o carregamento da reserva, preços, descontos, seleção de quartos, alterações de ocupação, navegação e respostas dos endpoints, incluindo o AllDetails.
+Contexto:
 
-Também vou observar possíveis erros, timeouts ou bloqueios na Network.
+- Trabalho como QA Engineer, realizando testes funcionais, de integração, regressão e automação.
+- Utilizo o Kiro como assistente.
+- A empresa utiliza Datadog APM.
+- Região Datadog: EU1 ("datadoghq.eu").
+- O objetivo inicial é validar o SKIP-2405, relativo a thread pool starvation e socket exhaustion na Ski Online Booking API.
+- Pretendo reutilizar esta integração em futuros tickets, sempre que existam dados de observabilidade relevantes.
 
-Como o critério de aceitação do SKIP-2405 é corrigir o thread pool starvation e o socket exhaustion, queria confirmar contigo: para além da regressão funcional, vamos ter alguma validação técnica ou métricas no Datadog para comprovar essa correção?
+Fase 1 — Configurar a integração
 
-Assim conseguimos distinguir o PASS funcional da aprovação completa do ticket.
+1. Verifica se existe uma Datadog Power oficial disponível no Kiro e privilegia essa integração.
+2. Como alternativa, utiliza o MCP Server oficial do Datadog:
+   "https://mcp.datadoghq.eu/v1/mcp"
+3. Prefere autenticação OAuth, utilizando o meu acesso empresarial autorizado.
+4. Configura exclusivamente ferramentas de leitura necessárias para APM, logs, traces e métricas.
+5. Não solicites credenciais no chat e não graves segredos em ficheiros, logs ou repositórios.
+6. Não autorizes automaticamente operações de escrita.
+7. Preserva as configurações MCP existentes e não dupliques servidores.
+8. Não instales agentes de monitorização, não alteres a infraestrutura e não modifiques o código da aplicação.
+9. Caso sejam necessárias permissões administrativas ou autorização da empresa, interrompe essa etapa e explica o que devo solicitar.
+
+Confirma a ligação através de uma consulta mínima e não destrutiva. Não declares sucesso se a autenticação ou o acesso falharem.
+
+Fase 2 — Identificar os serviços
+
+Inspeciona os serviços acessíveis no Datadog e identifica a API relevante no ambiente Staging.
+
+Para cada serviço relevante, identifica:
+
+- Nome exato do serviço e ambiente.
+- Endpoints disponíveis e respetivo volume de pedidos.
+- Latência, incluindo p50, p95 e p99 quando houver volume suficiente.
+- Taxa de erros HTTP 5xx.
+- Timeouts e exceções.
+- Dependências externas e chamadas HTTP.
+- Métricas de CPU, memória, thread pool e conexões, se estiverem instrumentadas.
+- Disponibilidade de traces e logs correlacionados.
+
+Não inventes métricas nem assumas que um sinal inexistente representa ausência de problemas.
+
+Fase 3 — SKIP-2405
+
+Preparar uma avaliação de regressão funcional e integração no Old Online Booking em Main Staging.
+
+Verificações:
+
+1. Carregamento e consulta de reservas.
+2. Preços e descontos.
+3. Seleção de quartos.
+4. Alteração de número de adultos, crianças e quartos.
+5. Navegação entre etapas da reserva.
+6. Respostas do endpoint AllDetails e respetivas dependências.
+7. Erros, timeouts e sinais de degradação observados no Datadog.
+
+Comparar, quando existirem dados equivalentes, os períodos anteriores e posteriores ao deployment.
+
+Distinguir:
+
+- PASS funcional.
+- FAIL funcional demonstrado.
+- BLOCKED por problemas de ambiente ou ausência de evidências.
+- Resultado técnico de desempenho ainda não comprovado.
+
+Não executar testes de carga ou stress sem autorização explícita. Não realizar reservas pagas nem pagamentos reais.
+
+Fase 4 — Modelo reutilizável para futuros testes
+
+Propor uma metodologia de observabilidade que possa ser utilizada com outros tickets Jira.
+
+Sempre que possível, correlacionar os testes com:
+
+- Identificador do ticket.
+- Ambiente.
+- Serviço.
+- Cenário executado.
+- Data e hora.
+- Identificador da execução.
+- Evidência funcional.
+- Logs e traces relevantes.
+- Métricas antes e depois da execução.
+
+Se houver testes Playwright, verificar a viabilidade de Datadog Test Visibility, mas não instalar dependências nem ativar envio de dados sem autorização.
+
+O Datadog deve funcionar como evidência complementar. Não deve determinar automaticamente se um teste funcional passou.
+
+Entrega esperada
+
+Apresenta:
+
+1. Estado da conexão: CONNECTED, BLOCKED ou NOT CONFIGURED.
+2. Método utilizado e permissões efetivas.
+3. Serviços de Staging identificados.
+4. Métricas realmente disponíveis.
+5. Limitações e riscos de segurança.
+6. Plano de observabilidade do SKIP-2405.
+7. Proposta reutilizável para os restantes testes.
+8. Ações que dependem de autorização.
+
+Começa pela integração de leitura e pela confirmação do acesso. Não alteres a aplicação ou a infraestrutura.
