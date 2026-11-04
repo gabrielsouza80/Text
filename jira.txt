@@ -1,175 +1,23 @@
-QA Validation — SKIP-2405
+QA Validation — PARTIAL PASS | SKIP-2379 — Black Friday > Sort Options
 
-Thread Pool Starvation and Socket Exhaustion
+Environment: Staging
 
-Act as a Senior QA Automation Engineer, using Playwright where appropriate.
+Validation Results:
 
-Your task is to validate the functional regression and integration behaviour of the Iglu Ski Old Online Booking flow after the API changes associated with SKIP-2405.
+- Feature ON — PASS: "Black Friday Deals" is available in the sorting dropdown and is selected by default on commercial pages.
+- Normal search — PASS: "Iglu recommends" remains the default sorting option, while "Black Friday Deals" is available for manual selection.
+- Feature OFF — PARTIAL FAIL: After disabling "IgluSki.BlackFriday" ("IsEnabled = 0"), the default sorting returns to "Iglu recommends", and the Black Friday sorting behaviour is no longer applied. However, the "Black Friday Deals" option remains visible in the dropdown.
 
-Environment: https://staging.igluski.com
+Expected Result:
 
-Scope: Old Online Booking only. Do not test the redesigned/new booking flow.
+When the feature toggle is disabled, all Black Friday-related functionality should be hidden or disabled, including the "Black Friday Deals" sorting option, as confirmed by the developer.
 
-1. Context
+Actual Result:
 
-The ticket aims to fix thread pool starvation and socket exhaustion.
+The Black Friday sorting option remains visible even when the feature is disabled.
 
-Related Pull Requests:
+QA Result: PARTIAL PASS — Fix required for the feature OFF scenario.
 
-- #256: Convert DetailsController sync-over-async actions to async.
-- #255: Inject pooled HttpClient into Iglu.Ski.SDK clients.
-- #90: Register Ski SDK clients using IHttpClientFactory.
+@Marcio Peixoto — Could you please review the visibility of the "Black Friday Deals" sorting option when the feature toggle is disabled?
 
-The developer confirmed that QA should use the normal Staging environment and test the old booking flow.
-
-Do not assume that every PR is merged or deployed. Verify deployment evidence if accessible and report any uncertainty.
-
-2. Initial assessment
-
-Before executing tests:
-
-1. Inspect the available project, testing tools and existing automated tests.
-2. Check whether Staging is accessible.
-3. Determine which booking scenarios can be safely automated.
-4. Reuse existing test infrastructure where possible.
-5. Identify any environmental blockers.
-
-Do not modify application source code, deploy anything or change infrastructure.
-
-3. Test scenarios
-
-TC01 — Booking initialisation
-
-- Open a valid ski holiday in Staging.
-- Start the old Online Booking flow.
-- Verify that accommodation details and availability load correctly.
-- Capture relevant API requests and responses.
-
-TC02 — Accommodation and room selection
-
-- Select a room.
-- Load available room options.
-- Verify the displayed details and pricing.
-- Confirm that navigation to the next stage works.
-
-TC03 — Pricing and discounts
-
-- Validate that prices are retrieved correctly.
-- Confirm that discounts are handled consistently when applicable.
-- Check the relevant API requests, especially GetPrice and GetHolidayDiscountRules if used by this flow.
-- Do not assume that HTTP 200 means the business response is correct.
-
-TC04 — Occupancy changes
-
-- Test a valid change in the number of adults or children.
-- Check whether the accommodation options and prices update consistently.
-- Observe whether relevant API requests are triggered.
-
-TC05 — Navigation and regression
-
-- Advance through the booking stages where safe.
-- Navigate backwards and forwards.
-- Verify that selected data is preserved correctly.
-- Check for unexpected errors or session expiration.
-
-TC06 — AllDetails and API integration
-
-- Identify whether AllDetails is called by the old booking flow.
-- If present, inspect method, payload, HTTP status and response time.
-- Compare requests when the occupancy remains unchanged and when it changes.
-- Check for redundant requests, failed requests or long-running calls.
-- Do not assume frontend caching behaviour applies to the old flow without evidence.
-
-TC07 — Stability
-
-- Observe request failures, timeouts and loading problems.
-- Verify that the interface remains responsive during normal usage.
-- Record timings for relevant API calls.
-- Distinguish existing Staging problems from reproducible regressions.
-
-4. Technical acceptance criteria
-
-The Jira acceptance criterion is:
-
-"Thread pool starvation and socket exhaustion fixed."
-
-Separate the validation into two parts:
-
-A. Functional regression
-
-Verify the booking flow continues to work correctly.
-
-B. Backend performance and resource management
-
-Determine whether suitable Datadog metrics, logs or developer-provided evidence are accessible.
-
-Do not claim thread pool starvation or socket exhaustion is fixed based only on browser requests.
-
-If backend evidence is unavailable, report this criterion as NOT VERIFIED.
-
-5. Safety and execution restrictions
-
-- Use Staging only.
-- Do not access Production for testing.
-- Do not submit actual reservations or payments.
-- Do not perform load, stress or concurrency tests without explicit authorisation.
-- Use a maximum of one Playwright worker.
-- Limit retries and avoid unnecessary repeated requests.
-- Do not change application source code.
-- Do not commit, push or deploy changes.
-- Do not bypass authentication or security controls.
-- Do not expose tokens, cookies, passwords or personal data in reports.
-- If browser access or test credentials are unavailable, report BLOCKED rather than inventing results.
-- Temporary QA test scripts are allowed in an isolated working directory, without modifying application repositories.
-
-6. Evidence requirements
-
-For every executed scenario, provide:
-
-- Test ID and description.
-- Exact steps performed.
-- Expected result.
-- Actual result.
-- PASS, FAIL or BLOCKED.
-- Relevant HTTP methods, status codes and response times.
-- Screenshots, traces or sanitised evidence when available.
-- Clear explanation of failures.
-
-Avoid treating an HTTP 200 response as sufficient proof of correct functionality.
-
-7. Final QA report
-
-Produce the report in Portuguese, with:
-
-1. Executive summary.
-2. Staging environment and deployment evidence.
-3. Test execution summary and total counts.
-4. Results for each test case.
-5. Functional regression verdict.
-6. Relevant defects or environmental blockers.
-7. Technical validation of thread pool/socket exhaustion, including what remains unverified.
-8. Evidence locations.
-9. Suggested Jira comment in English.
-10. Clear recommendation: PASS, PARTIAL PASS, FAIL or BLOCKED, supported by evidence.
-
-Never declare the full SKIP-2405 approved unless the complete acceptance criterion is supported.
-
-Start with environment assessment, then execute only safe and relevant regression scenarios.
-
-Verifica se existe uma ligação MCP funcional ao Datadog EU1.
-
-Não alteres configurações, não cries monitores e não executes ações de escrita.
-
-Caso a ligação esteja autorizada e funcional, analisa o serviço relacionado com o SKIP-2405, focando:
-
-- Thread pool starvation.
-- Socket exhaustion.
-- Latência e erros dos endpoints do Online Booking antigo.
-- Traces do AllDetails, GetPrice e GetSuitableRoomsPrices, quando disponíveis.
-- Comparação antes e depois do deployment das alterações relevantes.
-
-Não assumes nomes de serviços nem métricas. Identifica-os através das informações disponíveis.
-
-Apresenta um relatório em português com evidências, períodos analisados, métricas encontradas, limitações e conclusão.
-
-Se não houver métricas suficientes, assinala NOT VERIFIED. Não declares a correção validada sem evidências.
+Screenshot attached as evidence.
