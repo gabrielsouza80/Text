@@ -1,13 +1,7 @@
-**QA Validation — SKIP-2379 | Pending UX Clarification**
+QA Update — SKIP-2247
 
-During testing in Staging, I verified that the **Black Friday Deals** option is available in the *Sort by* dropdown and that the sorting works as expected when Black Friday offers are available.
+Aimee identified that the JSON-LD is still using the old, generic description in Staging.
 
-However, I identified a scenario that requires clarification:
+According to Marcio, when the Staging database is restored, some Staging URLs are replaced with Production URLs. This could explain the difference, as Production already has the updated meta description, while Staging still shows the old version.
 
-When a search has no Black Friday offers, the **Black Friday Deals** option remains available. If selected, regular results are still displayed without any Black Friday labels.
-
-I understand that this is a sorting option rather than a filter, so this behaviour is not necessarily a functional defect. However, it could cause confusion for users who expect to see Black Friday offers when selecting this option.
-
-**@Sian Forrest**, could you please confirm the expected behaviour in this scenario? Should we continue displaying regular results, hide/disable the option, or display an informative message?
-
-**QA Result:** Functional validation passed for the scenarios tested, with no issues identified. UX clarification is pending, and no defect has been confirmed at this stage.
+Therefore, I recommend validating the JSON-LD in Production after the ticket is deployed, confirming that it uses the updated description before final QA approval.
