@@ -1,23 +1,13 @@
-QA Validation — PARTIAL PASS | SKIP-2379 — Black Friday > Sort Options
+Hi Sian, thanks for the update!
 
-Environment: Staging
+For SKIP-2247, I validated the JSON-LD structure and main property data against the revised schema document. All 18 basic checks passed, although they didn't specifically cover the description content.
 
-Validation Results:
+Regarding Aimee's observation, I remember a previous ticket to replace the old generic meta descriptions with more detailed, property-specific content.
 
-- Feature ON — PASS: "Black Friday Deals" is available in the sorting dropdown and is selected by default on commercial pages.
-- Normal search — PASS: "Iglu recommends" remains the default sorting option, while "Black Friday Deals" is available for manual selection.
-- Feature OFF — PARTIAL FAIL: After disabling "IgluSki.BlackFriday" ("IsEnabled = 0"), the default sorting returns to "Iglu recommends", and the Black Friday sorting behaviour is no longer applied. However, the "Black Friday Deals" option remains visible in the dropdown.
+I manually checked Chalet La Breche in Production and confirmed that the meta description has been updated to mention the ski-in/ski-out access, sauna and whirlpool.
 
-Expected Result:
+This might be Staging-specific, but I can't confirm yet as Staging is currently returning a 504 Gateway Timeout.
 
-When the feature toggle is disabled, all Black Friday-related functionality should be hidden or disabled, including the "Black Friday Deals" sorting option, as confirmed by the developer.
+Do you know if Aimee checked this in Staging, and whether the JSON-LD should use the updated meta description?
 
-Actual Result:
-
-The Black Friday sorting option remains visible even when the feature is disabled.
-
-QA Result: PARTIAL PASS — Fix required for the feature OFF scenario.
-
-@Marcio Peixoto — Could you please review the visibility of the "Black Friday Deals" sorting option when the feature toggle is disabled?
-
-Screenshot attached as evidence.
+Once Staging is available again, I can compare both descriptions before we close the ticket.
