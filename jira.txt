@@ -1,13 +1,28 @@
-Hi Sian, thanks for the update!
+Hi Sian, just to add something Marcio mentioned.
 
-For SKIP-2247, I validated the JSON-LD structure and main property data against the revised schema document. All 18 basic checks passed, although they didn't specifically cover the description content.
+He explained that when the Staging database is restored, some Staging URLs are replaced with Production URLs, which could explain why certain things aren't working as expected in Staging.
 
-Regarding Aimee's observation, I remember a previous ticket to replace the old generic meta descriptions with more detailed, property-specific content.
+This might be related to what we're seeing with the schema, although it's not confirmed.
 
-I manually checked Chalet La Breche in Production and confirmed that the meta description has been updated to mention the ski-in/ski-out access, sauna and whirlpool.
+Once the changes are deployed to Production, I think it would be worth validating the schema there as well, as I'd expect the correct description to be displayed. That way, we can confirm everything is working as intended.
 
-This might be Staging-specific, but I can't confirm yet as Staging is currently returning a 504 Gateway Timeout.
 
-Do you know if Aimee checked this in Staging, and whether the JSON-LD should use the updated meta description?
+**QA Validation — PASS (04/11/2026)**
 
-Once Staging is available again, I can compare both descriptions before we close the ticket.
+Tested **SKIP-2379 — Black Friday > Sort Options** in Staging.
+
+**Validation Results:**
+
+- **Feature enabled:** Black Friday Deals is the default sorting option on commercial pages.
+- Verified on Last Minute Ski Holidays and Catered Ski Chalet Holidays.
+- Standard search pages continue to use Iglu recommends as the default sorting option.
+- Black Friday Deals is available in the sorting dropdown on both commercial and standard search pages.
+- Selecting Black Friday Deals prioritises Black Friday offers in the results.
+- Other sorting options remain available and functional.
+- **Feature disabled:** Following the developer's fix and redeployment, Black Friday Deals is no longer displayed in the sorting dropdown.
+- The default sorting returns to Iglu recommends.
+- The expected behaviour was confirmed after refreshing the page.
+
+**QA Result: PASS**
+
+All tested acceptance criteria passed. The previously identified feature-toggle issue has been resolved, and no further issues were identified within the tested scope.
