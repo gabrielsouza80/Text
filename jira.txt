@@ -1,28 +1,13 @@
-Hi Sian, just to add something Marcio mentioned.
+**QA Validation — SKIP-2379 | Pending UX Clarification**
 
-He explained that when the Staging database is restored, some Staging URLs are replaced with Production URLs, which could explain why certain things aren't working as expected in Staging.
+During testing in Staging, I verified that the **Black Friday Deals** option is available in the *Sort by* dropdown and that the sorting works as expected when Black Friday offers are available.
 
-This might be related to what we're seeing with the schema, although it's not confirmed.
+However, I identified a scenario that requires clarification:
 
-Once the changes are deployed to Production, I think it would be worth validating the schema there as well, as I'd expect the correct description to be displayed. That way, we can confirm everything is working as intended.
+When a search has no Black Friday offers, the **Black Friday Deals** option remains available. If selected, regular results are still displayed without any Black Friday labels.
 
+I understand that this is a sorting option rather than a filter, so this behaviour is not necessarily a functional defect. However, it could cause confusion for users who expect to see Black Friday offers when selecting this option.
 
-**QA Validation — PASS (04/11/2026)**
+**@Sian Forrest**, could you please confirm the expected behaviour in this scenario? Should we continue displaying regular results, hide/disable the option, or display an informative message?
 
-Tested **SKIP-2379 — Black Friday > Sort Options** in Staging.
-
-**Validation Results:**
-
-- **Feature enabled:** Black Friday Deals is the default sorting option on commercial pages.
-- Verified on Last Minute Ski Holidays and Catered Ski Chalet Holidays.
-- Standard search pages continue to use Iglu recommends as the default sorting option.
-- Black Friday Deals is available in the sorting dropdown on both commercial and standard search pages.
-- Selecting Black Friday Deals prioritises Black Friday offers in the results.
-- Other sorting options remain available and functional.
-- **Feature disabled:** Following the developer's fix and redeployment, Black Friday Deals is no longer displayed in the sorting dropdown.
-- The default sorting returns to Iglu recommends.
-- The expected behaviour was confirmed after refreshing the page.
-
-**QA Result: PASS**
-
-All tested acceptance criteria passed. The previously identified feature-toggle issue has been resolved, and no further issues were identified within the tested scope.
+**QA Result:** Functional validation passed for the scenarios tested, with no issues identified. UX clarification is pending, and no defect has been confirmed at this stage.
