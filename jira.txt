@@ -1,11 +1,7 @@
-QA Validation — SKIP-2392 | PASS
+QA Update — SKIP-2358 | Blocked by Merge Conflicts
 
-Tested in Staging, following the steps demonstrated by Marcio and reproducing the process manually.
+The associated Pull Request (#2220) currently has merge conflicts with "master", preventing the branch from being synced.
 
-Confirmed that the Black Friday page can be changed from an Embedded Search Page to an HTML page.
+The conflicts need to be resolved by the developer before the branch can be synced and testing can proceed on the updated version.
 
-The HTML test content (404 placeholder) was displayed after the change, confirming that the page was rendering the configured HTML content.
-
-QA Result: PASS — The page type change was successfully validated.
-
-Evidence: Screenshots attached.
+QA Status: BLOCKED — Pending merge conflict resolution.
