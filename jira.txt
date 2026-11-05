@@ -1,11 +1,7 @@
-Gustavo, estou a validar o ticket do AB Smartly no Flow B e encontrei um comportamento que queria confirmar contigo.
+Confirmei que, em navegação anónima, o VisitorId do Booking ficou igual ao vid recebido na URL e manteve-se após o refresh, conforme esperado.
 
-Ao clicar em Book Online, o novo Booking recebe corretamente o "vid" na URL, com o mesmo valor do "VisitorId" do Ski Site ("69c503bb...").
+No entanto, na navegação normal, o VisitorId apresentou valores diferentes do vid e voltou a mudar após o refresh.
 
-No entanto, ao verificar o cookie "VisitorId" no novo Booking, encontrei um valor diferente ("e08b6537..."). Depois de atualizar a página, o valor mudou novamente ("a2b2ec7d...").
+Pelo que testámos, o comportamento está correto em navegação anónima, mas ainda não conseguimos confirmar se o problema na navegação normal foi causado por um cookie já existente.
 
-Confirmei também que existe apenas um cookie "VisitorId" no domínio do novo Booking.
-
-Pelo critério de aceitação, o "vid" recebido deveria substituir o cookie existente e manter o mesmo identificador, correto?
-
-Ainda não concluí a validação do Goal no AB Smartly. Queria confirmar contigo este comportamento antes de avançar.
+Consideras necessário validar também esse cenário antes de fechar o ticket?
