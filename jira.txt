@@ -1,17 +1,11 @@
-QA Validation — PASS | SKIP-2409
+Gustavo, estou a validar o ticket do AB Smartly no Flow B e encontrei um comportamento que queria confirmar contigo.
 
-Tested in Staging using holiday ID 135947533 (Pension Furstenhof).
+Ao clicar em Book Online, o novo Booking recebe corretamente o "vid" na URL, com o mesmo valor do "VisitorId" do Ski Site ("69c503bb...").
 
-Validations performed:
+No entanto, ao verificar o cookie "VisitorId" no novo Booking, encontrei um valor diferente ("e08b6537..."). Depois de atualizar a página, o valor mudou novamente ("a2b2ec7d...").
 
-- Confirmed that the Add another room button is displayed when room availability allows.
-- Confirmed guests and successfully proceeded to the room selection screen.
-- Clicked Change guests to return to the guest selection screen.
-- Verified that Add another room remains available after returning.
-- Successfully added a second room, resulting in 2 rooms and 4 guests.
-- Confirmed that both rooms were displayed on the room selection screen, with the total updated to £2,316.
-- Verified that Add another room disappears after reaching the available room limit.
+Confirmei também que existe apenas um cookie "VisitorId" no domínio do novo Booking.
 
-QA Result: PASS
+Pelo critério de aceitação, o "vid" recebido deveria substituir o cookie existente e manter o mesmo identificador, correto?
 
-The reported issue is no longer reproducible in the tested scenarios. The button remains available when another room can be added and is hidden when the room limit is reached.
+Ainda não concluí a validação do Goal no AB Smartly. Queria confirmar contigo este comportamento antes de avançar.
