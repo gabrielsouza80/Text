@@ -1,7 +1,7 @@
-Confirmei que, em navegação anónima, o VisitorId do Booking ficou igual ao vid recebido na URL e manteve-se após o refresh, conforme esperado.
+Pelo que explicaste, quando o Booking recebe um novo vid, este deve substituir o VisitorId anterior e manter-se após o refresh.
 
-No entanto, na navegação normal, o VisitorId apresentou valores diferentes do vid e voltou a mudar após o refresh.
+No primeiro teste, em navegação normal, o vid chegou corretamente à URL, mas o VisitorId ficou diferente e voltou a mudar após o refresh.
 
-Pelo que testámos, o comportamento está correto em navegação anónima, mas ainda não conseguimos confirmar se o problema na navegação normal foi causado por um cookie já existente.
+Em navegação anónima, funcionou conforme esperado.
 
-Consideras necessário validar também esse cenário antes de fechar o ticket?
+Sendo assim, podemos considerar o comportamento observado na navegação normal um bug, mesmo que possa estar relacionado com cookies já existentes?
