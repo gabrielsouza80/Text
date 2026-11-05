@@ -1,7 +1,11 @@
-QA Update — SKIP-2247
+QA Validation — SKIP-2392 | PASS
 
-Aimee identified that the JSON-LD is still using the old, generic description in Staging.
+Tested in Staging, following the steps demonstrated by Marcio and reproducing the process manually.
 
-According to Marcio, when the Staging database is restored, some Staging URLs are replaced with Production URLs. This could explain the difference, as Production already has the updated meta description, while Staging still shows the old version.
+Confirmed that the Black Friday page can be changed from an Embedded Search Page to an HTML page.
 
-Therefore, I recommend validating the JSON-LD in Production after the ticket is deployed, confirming that it uses the updated description before final QA approval.
+The HTML test content (404 placeholder) was displayed after the change, confirming that the page was rendering the configured HTML content.
+
+QA Result: PASS — The page type change was successfully validated.
+
+Evidence: Screenshots attached.
