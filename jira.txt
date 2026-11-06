@@ -1,7 +1,7 @@
-Pelo que explicaste, quando o Booking recebe um novo vid, este deve substituir o VisitorId anterior e manter-se após o refresh.
+Gustavo, depois da correção, consegui concluir uma reserva no Flow B até à Confirmation Page.
 
-No primeiro teste, em navegação normal, o vid chegou corretamente à URL, mas o VisitorId ficou diferente e voltou a mudar após o refresh.
+O VisitorId manteve-se igual no Ski Site e no novo Booking ("d11d7d99...").
 
-Em navegação anónima, funcionou conforme esperado.
+No AB Smartly, encontrei as Exposures do "new-online-book-flow" e os Goals "ski_funnel_page_view" associados ao mesmo identificador, mas não encontrei o Goal "online_booking".
 
-Sendo assim, podemos considerar o comportamento observado na navegação normal um bug, mesmo que possa estar relacionado com cookies já existentes?
+Esse evento deveria aparecer após a confirmação da reserva, correto? Há alguma condição adicional ou algum atraso no registo que deva considerar?
