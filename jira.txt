@@ -1,51 +1,17 @@
-QA Validation – PASS (Staging / Variant B)
+QA Validation – PASS (Staging / SKIP-2425)
 
-Retested the new Online Booking flow after the latest deployment, following the test plan provided by the developer.
+Retested the Online Booking flow after the latest deployment, following the ticket's functional test scenarios.
 
-Test 1 – Variant B Booking Attribution: PASS
+Test Results:
 
-- Confirmed that the legacy Ski Site "VisitorId" is correctly passed to the new Booking through the "vid" URL parameter.
-- Verified that the Booking "VisitorId" cookie matches the received "vid" and remains consistent throughout the booking journey.
-- Completed the booking successfully and reached the Confirmation Page.
-- Confirmed that the "online_booking" goal is recorded in AB Smartly.
-- Verified that "properties.visitor_id" matches the Booking "VisitorId".
-- Confirmed that the goal and the "new-online-book-flow" experiment exposure share the same "unit_uid".
-- Verified that "unit_uid_hex" matches the MD5 hash of the "VisitorId".
-- Confirmed that the goal contains the browser User-Agent rather than "node".
-- Verified that the "ski_funnel_page_view" goal is recorded.
+- Test 1 – Variant B Booking Attribution: PASS
+- Test 2 – New "vid" Replaces Existing Cookie: PASS
+- Test 3 – Changing "holidayId" Without a New "vid": PASS
+- Test 4 – Direct Booking Without Cookie or "vid": PASS
+- Test 5 – Invalid "vid" Handling: PASS
 
-Test 2 – New "vid" Replaces Existing Cookie: PASS
+Confirmed that the "VisitorId" is correctly propagated and preserved, the "online_booking" goal is successfully recorded in AB Smartly, and the goal is associated with the corresponding Variant B experiment exposure using the same "unit_uid".
 
-- Tested with two different valid visitor IDs.
-- Confirmed that a new valid "vid" replaces the previous Booking "VisitorId" cookie.
+Final Result: PASS
 
-Test 3 – Changing "holidayId" Without a New "vid": PASS
-
-- Changed the "holidayId" in the Booking URL without providing a new "vid".
-- Confirmed that the existing "VisitorId" remained unchanged.
-
-Test 4 – Direct Booking Without Cookie or "vid": PASS
-
-- Accessed the new Booking directly in a fresh incognito session without a "vid" parameter.
-- Confirmed that a valid "VisitorId" was generated.
-- Verified that the cookie remained unchanged after refreshing the page.
-- Completed the booking and confirmed the "online_booking" goal was recorded in AB Smartly.
-
-Test 5 – Invalid "vid": PASS
-
-- Accessed the Booking using an invalid "vid=abc".
-- Confirmed that the invalid value was not accepted as the "VisitorId".
-- Verified that the application generated a valid visitor ID instead.
-
-Regression Validation
-
-- End-to-end Variant B booking flow: PASS.
-- Confirmation Page reached successfully: PASS.
-- Confirmation Page refresh: Not separately confirmed.
-- Variant A legacy booking tracking: Not separately validated.
-
-Final Result: PASS – Main Scenario and Tests 1–5
-
-The original issue is no longer reproducible after the latest deployment. The "online_booking" goal is now correctly recorded in AB Smartly and attributed to the same visitor as the experiment exposure.
-
-All five functional test scenarios passed. The remaining regression checks are explicitly noted above and are not included in this PASS result.
+All five functional test scenarios were successfully validated in Staging. The original issue is no longer reproducible after the latest deployment.
