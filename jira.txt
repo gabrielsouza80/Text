@@ -1,17 +1,18 @@
-QA Validation – PASS (Staging / SKIP-2425)
+QA Validation – PASS | SKIP-2358
 
-Retested the Online Booking flow after the latest deployment, following the ticket's functional test scenarios.
+Tested in Staging ("skip-2358.staging.igluski.com") using the "non-block-refine-filters" experiment – Variant B.
 
-Test Results:
+Validations performed:
 
-- Test 1 – Variant B Booking Attribution: PASS
-- Test 2 – New "vid" Replaces Existing Cookie: PASS
-- Test 3 – Changing "holidayId" Without a New "vid": PASS
-- Test 4 – Direct Booking Without Cookie or "vid": PASS
-- Test 5 – Invalid "vid" Handling: PASS
+- Confirmed that multiple search filters can be selected consecutively without the remaining filters becoming disabled or greyed out.
+- Verified that only the holiday search results area is temporarily blocked by the grey overlay while results are updating.
+- Confirmed that the holiday results refresh successfully after applying multiple filters.
+- Selected four country filters: France, Germany, Italy and Japan.
+- Verified that all selected countries are preserved in the URL parameters: "country=FR&country=DE&country=IT&country=JP".
+- Confirmed that the displayed holiday results are consistent with the selected countries, including properties in France and Italy.
 
-Confirmed that the "VisitorId" is correctly propagated and preserved, the "online_booking" goal is successfully recorded in AB Smartly, and the goal is associated with the corresponding Variant B experiment exposure using the same "unit_uid".
+QA Result: PASS
 
-Final Result: PASS
+The original issue is no longer reproducible in the tested Variant B scenario. Search filters remain interactive during results loading, and the selected filters are correctly reflected in the URL and updated results.
 
-All five functional test scenarios were successfully validated in Staging. The original issue is no longer reproducible after the latest deployment.
+Screenshots available as evidence.
