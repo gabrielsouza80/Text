@@ -1,18 +1,23 @@
-QA Validation – PASS | SKIP-2358
+QA Validation – FAIL | SKIP-2358
 
 Tested in Staging ("skip-2358.staging.igluski.com") using the "non-block-refine-filters" experiment – Variant B.
 
-Validations performed:
+Passed validations:
 
-- Confirmed that multiple search filters can be selected consecutively without the remaining filters becoming disabled or greyed out.
-- Verified that only the holiday search results area is temporarily blocked by the grey overlay while results are updating.
-- Confirmed that the holiday results refresh successfully after applying multiple filters.
-- Selected four country filters: France, Germany, Italy and Japan.
-- Verified that all selected countries are preserved in the URL parameters: "country=FR&country=DE&country=IT&country=JP".
-- Confirmed that the displayed holiday results are consistent with the selected countries, including properties in France and Italy.
+- Multiple filters can initially be selected without blocking other filters.
+- The grey overlay only affects holiday results during loading.
+- Results update correctly, and selected filters are preserved in the URL.
 
-QA Result: PASS
+Issue found:
 
-The original issue is no longer reproducible in the tested Variant B scenario. Search filters remain interactive during results loading, and the selected filters are correctly reflected in the URL and updated results.
+When rapidly selecting multiple filters across different categories, the search can return no exact matches and display alternative results.
 
-Screenshots available as evidence.
+In this state, some filter options become disabled or disappear, including Country, preventing users from deselecting filters or adjusting their search criteria.
+
+Expected: Filters should remain accessible and interactive, even when no exact results are found.
+
+Actual: Some filters become unavailable, preventing users from modifying their selections.
+
+QA Result: FAIL – The main scenario works, but an issue was identified during exploratory testing that requires investigation.
+
+Screenshots attached as evidence.
