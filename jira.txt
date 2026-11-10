@@ -1,23 +1,24 @@
-QA Validation – FAIL | SKIP-2358
+QA Validation – PASS | SKIP-2421
 
-Tested in Staging ("skip-2358.staging.igluski.com") using the "non-block-refine-filters" experiment – Variant B.
+Tested in Staging using the new Online Booking flow.
 
-Passed validations:
+Validations performed:
 
-- Multiple filters can initially be selected without blocking other filters.
-- The grey overlay only affects holiday results during loading.
-- Results update correctly, and selected filters are preserved in the URL.
+Holiday ID 136093847 – Hotel Erzberg
 
-Issue found:
+- Confirmed the £200 direct discount, reducing the booking total from £2,266.00 to £2,066.00.
+- Added two lift passes and verified the Buy 1, get 1 half price promotion, saving £203.13.
+- Confirmed both offers are applied simultaneously, with a final total of £2,675.39.
 
-When rapidly selecting multiple filters across different categories, the search can return no exact matches and display alternative results.
+Holiday ID 204574918 – Crazy Reindeer Hotel
 
-In this state, some filter options become disabled or disappear, including Country, preventing users from deselecting filters or adjusting their search criteria.
+- Confirmed the £200 direct discount.
+- Added two lift passes and verified the Buy 1, get 1 half price promotion, saving £124.01.
+- Confirmed both offers are applied simultaneously, with a final total of £2,566.03.
+- Verified that both discounts and the final total remain unchanged after proceeding to Passenger Details.
 
-Expected: Filters should remain accessible and interactive, even when no exact results are found.
+QA Result: PASS
 
-Actual: Some filters become unavailable, preventing users from modifying their selections.
-
-QA Result: FAIL – The main scenario works, but an issue was identified during exploratory testing that requires investigation.
+Applicable discounts and lift pass promotions are correctly displayed, calculated and applied together in both tested holidays. The original issue is no longer reproducible in the validated scenarios.
 
 Screenshots attached as evidence.
