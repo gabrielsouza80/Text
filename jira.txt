@@ -1,24 +1,19 @@
-QA Validation – PASS | SKIP-2421
+QA Validation – FAIL | SKIP-2432
 
-Tested in Staging using the new Online Booking flow.
+Manually tested the Search by Holiday ID functionality in Staging after deploying the SKIP-2432 branch.
 
-Validations performed:
+Test results:
 
-Holiday ID 136093847 – Hotel Erzberg
+- Valid Holiday ID ("136093847"): PASS – Successfully redirects to the correct holiday page.
+- Non-existent Holiday ID ("000000"): FAIL – Displays an ERROR 500 page instead of handling the missing result gracefully.
+- Invalid input: Non-numeric characters or insufficient digits redirect to the homepage without a validation message.
 
-- Confirmed the £200 direct discount, reducing the booking total from £2,266.00 to £2,066.00.
-- Added two lift passes and verified the Buy 1, get 1 half price promotion, saving £203.13.
-- Confirmed both offers are applied simultaneously, with a final total of £2,675.39.
+Expected Result: Search requests should be handled without unexpected server errors, including when no matching holiday is found.
 
-Holiday ID 204574918 – Crazy Reindeer Hotel
+Actual Result: Searching for a non-existent Holiday ID displays an ERROR 500 page.
 
-- Confirmed the £200 direct discount.
-- Added two lift passes and verified the Buy 1, get 1 half price promotion, saving £124.01.
-- Confirmed both offers are applied simultaneously, with a final total of £2,566.03.
-- Verified that both discounts and the final total remain unchanged after proceeding to Passenger Details.
+QA Result: FAIL
 
-QA Result: PASS
-
-Applicable discounts and lift pass promotions are correctly displayed, calculated and applied together in both tested holidays. The original issue is no longer reproducible in the validated scenarios.
+The valid search scenario works, but the error handling issue remains reproducible in the tested deployment.
 
 Screenshots attached as evidence.
