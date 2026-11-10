@@ -1,19 +1,9 @@
-QA Validation — PASS | SKIP-2432
+Hi Gustavo, I understand that having no matching results for a particular filter combination is expected.
 
-Tested in Staging after the latest deployment.
+However, the main issue is not the lack of results. The problem is that, after selecting multiple filters, some filter options become unavailable or disappear entirely.
 
-Validations performed:
+For example, all Country options disappeared, including the previously selected ones. This prevents the user from deselecting those countries or adjusting the search to get matching results.
 
-- Valid Holiday ID ("136093847") opens the correct holiday.
-- Non-existent ID ("000000") redirects to the homepage without a 500 error.
-- Invalid input ("abc123") redirects to the homepage without errors.
-- Incomplete ID ("123") redirects to the homepage without errors.
-- Successfully completed the Old Booking Flow and reached the Confirmation Page, with the booking reference displayed and no visible errors.
+Even when no results are found, users should still be able to modify or remove their selected filters.
 
-QA Result: PASS
-
-All five functional and regression scenarios tested passed. The previously observed 500 error is no longer reproducible, and the Old Booking confirmation page continues to work correctly.
-
-Screenshots available as evidence.
-
-Ok Sian, I'll prioritise the tickets in Ready for Test. Once those are completed, I'll start testing Luca's changes, paying particular attention to the typography, header and footer, and the new Airpicker date picker.
+The screenshots attached show this behaviour.
