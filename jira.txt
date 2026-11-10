@@ -1,19 +1,19 @@
-QA Validation – FAIL | SKIP-2432
+QA Validation — PASS | SKIP-2432
 
-Manually tested the Search by Holiday ID functionality in Staging after deploying the SKIP-2432 branch.
+Tested in Staging after the latest deployment.
 
-Test results:
+Validations performed:
 
-- Valid Holiday ID ("136093847"): PASS – Successfully redirects to the correct holiday page.
-- Non-existent Holiday ID ("000000"): FAIL – Displays an ERROR 500 page instead of handling the missing result gracefully.
-- Invalid input: Non-numeric characters or insufficient digits redirect to the homepage without a validation message.
+- Valid Holiday ID ("136093847") opens the correct holiday.
+- Non-existent ID ("000000") redirects to the homepage without a 500 error.
+- Invalid input ("abc123") redirects to the homepage without errors.
+- Incomplete ID ("123") redirects to the homepage without errors.
+- Successfully completed the Old Booking Flow and reached the Confirmation Page, with the booking reference displayed and no visible errors.
 
-Expected Result: Search requests should be handled without unexpected server errors, including when no matching holiday is found.
+QA Result: PASS
 
-Actual Result: Searching for a non-existent Holiday ID displays an ERROR 500 page.
+All five functional and regression scenarios tested passed. The previously observed 500 error is no longer reproducible, and the Old Booking confirmation page continues to work correctly.
 
-QA Result: FAIL
+Screenshots available as evidence.
 
-The valid search scenario works, but the error handling issue remains reproducible in the tested deployment.
-
-Screenshots attached as evidence.
+Ok Sian, I'll prioritise the tickets in Ready for Test. Once those are completed, I'll start testing Luca's changes, paying particular attention to the typography, header and footer, and the new Airpicker date picker.
