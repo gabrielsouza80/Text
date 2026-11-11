@@ -1,17 +1,5 @@
-SELECT TOP (100)
-    SupplierPriceAvailableId,
-    SupplierFileId,
-    SupplierUnitId,
-    SupplierCode,
-    Price,
-    StartDate,
-    Duration,
-    BoardBasisCode,
-    LastUpdated
-FROM [Ski].[dbo].[SupplierPriceAvailable]
-WHERE StartDate >= '2026-12-19'
-  AND StartDate < '2026-12-20'
-  AND Duration = 7
-  AND BoardBasisCode = 'HB'
-  AND CurrencyCode = 'GBP'
-ORDER BY LastUpdated DESC;
+SELECT TOP (10)
+    *
+FROM [Ski].[dbo].[SupplierFileImportLog]
+WHERE SupplierFileId = 414
+ORDER BY Date DESC;
