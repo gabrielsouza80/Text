@@ -1,19 +1,9 @@
-QA Validation – PASS (Staging / Desktop & Mobile)
+SELECT TOP (20) *
+FROM [Ski].[dbo].[SupplierPriceAvailable];
 
-Validated the "easy-remove-refine-filters" functionality.
 
-Validations performed:
-
-- Selected multiple filters across the Refine sections.
-- Confirmed that selected filters are displayed as removable tags above the search results.
-- Verified individual filter removal using the X button.
-- Verified the Clear all filters functionality.
-- Confirmed that filter tags remain synchronized with the selected filters.
-- Verified that the tags are not sticky when scrolling.
-- Tested the functionality on mobile, confirming that tags wrap correctly and remain accessible.
-
-Scope clarification: As confirmed by the developer, filters under Refine Holiday Details are excluded from the tag functionality.
-
-Result: PASS
-
-No functional issues were identified in the tested scenarios on desktop or mobile.
+SELECT TOP (1) *
+FROM [Ski].[dbo].[SupplierFileImportLog]
+WHERE SupplierFileId = <ID_CORRETO>
+  AND Successful = 1
+ORDER BY Date DESC;
