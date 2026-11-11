@@ -1,28 +1,13 @@
-DECLARE @HolidayId BIGINT = 202075020;
+QA Validation – BLOCKED (SKIP-2376)
 
-SELECT
-    p.SupplierPriceAvailableId AS HolidayId,
-    p.SupplierFileId,
-    p.Price,
-    CONVERT(VARCHAR(16), l.[Date], 120) AS PriceImported
-FROM [Ski].[dbo].[SupplierPriceAvailable] p
-OUTER APPLY (
-    SELECT TOP 1 [Date]
-    FROM [Ski].[dbo].[SupplierFileImportLog]
-    WHERE SupplierFileId = p.SupplierFileId
-      AND Successful = 1
-    ORDER BY [Date] DESC
-) l
-WHERE p.SupplierPriceAvailableId = @HolidayId;
+Unable to proceed with functional testing due to a failed TeamCity build.
 
-Database Validation – PASS
+Build: "#2.667.7425-SKIP-2376"
+Status: Failed
+Error: Compilation error in "Iglu.Ski.RedesignedWebPresentation.csproj" during the MSBuild step.
 
-The displayed "Price imported" date has now been verified against the database.
+Result: BLOCKED
 
-Confirmed that Holiday ID "202075020" (Seehotel Sissi) matches "SupplierPriceAvailableId = 202075020", with "SupplierFileId = 414" and "Price = 442".
+Functional validation has not been performed, as the branch could not be successfully built and deployed.
 
-The corresponding successful import in "SupplierFileImportLog" was recorded on "2026-11-09 12:10:01", matching the displayed value "2026-11-09 12:10".
-
-Result: PASS
-
-Both the visual functionality and the displayed import timestamp have been validated successfully against the database.
+A successful build and deployment are required before QA testing can resume.
