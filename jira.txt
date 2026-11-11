@@ -1,25 +1,19 @@
-QA Validation – PASS (Staging / SKIP-2394)
+QA Validation – PASS (Staging / Desktop & Mobile)
 
-Tested the Property Page to verify that the price update date is displayed in the supplier information section.
-
-Test data:
-
-- Property: Seehotel Sissi
-- Holiday ID: "202075020"
-- Displayed price: £442 per person
+Validated the "easy-remove-refine-filters" functionality.
 
 Validations performed:
 
-- Confirmed that the new "Price imported" column is displayed in the supplier information table.
-- Verified that the date "2026-11-09 12:10" is correctly displayed.
-- Refreshed the page and confirmed that the date remains visible and unchanged.
-- Compared the SKIP-2394 branch against the regular Staging environment.
-- Confirmed that the "Price imported" column is present in the branch but absent from regular Staging.
-- Verified that the displayed holiday price remains unchanged (£442 per person).
-- No visual issues were identified in the affected section.
+- Selected multiple filters across the Refine sections.
+- Confirmed that selected filters are displayed as removable tags above the search results.
+- Verified individual filter removal using the X button.
+- Verified the Clear all filters functionality.
+- Confirmed that filter tags remain synchronized with the selected filters.
+- Verified that the tags are not sticky when scrolling.
+- Tested the functionality on mobile, confirming that tags wrap correctly and remain accessible.
 
-Result: PASS – Functional Validation
+Scope clarification: As confirmed by the developer, filters under Refine Holiday Details are excluded from the tag functionality.
 
-The new column and its date are displayed as expected, satisfying the visual aspect of the acceptance criteria.
+Result: PASS
 
-Note: The displayed field is labelled "Price imported". Its correspondence to the actual last price update timestamp has not been independently verified against the source data.
+No functional issues were identified in the tested scenarios on desktop or mobile.
