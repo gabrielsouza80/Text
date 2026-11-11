@@ -1,5 +1,20 @@
-SELECT TOP (10)
-    *
-FROM [Ski].[dbo].[SupplierFileImportLog]
-WHERE SupplierFileId = 414
-ORDER BY Date DESC;
+SELECT
+    s.name AS SchemaName,
+    t.name AS TableName,
+    c.name AS ColumnName
+FROM [Ski].sys.tables AS t
+INNER JOIN [Ski].sys.schemas AS s
+    ON s.schema_id = t.schema_id
+INNER JOIN [Ski].sys.columns AS c
+    ON c.object_id = t.object_id
+WHERE
+    c.name IN (
+        'HolidayId',
+        'SupplierPriceAvailableId',
+        'SupplierFileId',
+        'SupplierUnitId',
+        'PropertyId'
+    )
+ORDER BY
+    t.name,
+    c.name;
