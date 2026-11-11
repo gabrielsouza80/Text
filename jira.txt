@@ -1,19 +1,16 @@
-SELECT DISTINCT TOP (50)
-    os.PropertyId,
-    os.SupplierPriceAvailableId,
-    spa.SupplierFileId,
-    spa.SupplierUnitId,
-    spa.SupplierCode,
-    spa.Price,
-    spa.StartDate,
-    spa.Duration,
-    spa.BoardBasisCode,
-    spa.LastUpdated
-FROM [Ski].[dbo].[OptimisedSearch] AS os
-INNER JOIN [Ski].[dbo].[SupplierPriceAvailable] AS spa
-    ON os.SupplierPriceAvailableId = spa.SupplierPriceAvailableId
-WHERE os.PropertyId = 40374
-  AND spa.SupplierFileId = 414
-  AND spa.StartDate >= '2026-12-19'
-  AND spa.StartDate < '2026-12-20'
-ORDER BY spa.LastUpdated DESC;
+DECLARE @HolidayId BIGINT = 202075020;
+
+SELECT
+    p.SupplierPriceAvailableId AS HolidayId,
+    p.SupplierFileId,
+    p.Price,
+    CONVERT(VARCHAR(16), l.[Date], 120) AS PriceImported
+FROM [Ski].[dbo].[SupplierPriceAvailable] p
+OUTER APPLY (
+    SELECT TOP 1 [Date]
+    FROM [Ski].[dbo].[SupplierFileImportLog]
+    WHERE SupplierFileId = p.SupplierFileId
+      AND Successful = 1
+    ORDER BY [Date] DESC
+) l
+WHERE p.SupplierPriceAvailableId = @HolidayId;
