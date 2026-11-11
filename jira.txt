@@ -14,3 +14,15 @@ OUTER APPLY (
     ORDER BY [Date] DESC
 ) l
 WHERE p.SupplierPriceAvailableId = @HolidayId;
+
+Database Validation – PASS
+
+The displayed "Price imported" date has now been verified against the database.
+
+Confirmed that Holiday ID "202075020" (Seehotel Sissi) matches "SupplierPriceAvailableId = 202075020", with "SupplierFileId = 414" and "Price = 442".
+
+The corresponding successful import in "SupplierFileImportLog" was recorded on "2026-11-09 12:10:01", matching the displayed value "2026-11-09 12:10".
+
+Result: PASS
+
+Both the visual functionality and the displayed import timestamp have been validated successfully against the database.
