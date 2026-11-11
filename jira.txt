@@ -1,8 +1,8 @@
-SELECT TOP (50)
+SELECT TOP (100)
     SupplierPriceAvailableId,
     SupplierFileId,
-    SupplierCode,
     SupplierUnitId,
+    SupplierCode,
     Price,
     StartDate,
     Duration,
@@ -11,6 +11,7 @@ SELECT TOP (50)
 FROM [Ski].[dbo].[SupplierPriceAvailable]
 WHERE StartDate >= '2026-12-19'
   AND StartDate < '2026-12-20'
+  AND Duration = 7
+  AND BoardBasisCode = 'HB'
   AND CurrencyCode = 'GBP'
-  AND Price BETWEEN 400 AND 1000
-ORDER BY Price ASC;
+ORDER BY LastUpdated DESC;
