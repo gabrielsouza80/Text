@@ -1,9 +1,16 @@
-Hi Gustavo, I understand that having no matching results for a particular filter combination is expected.
+QA Validation – PASS | SKIP-2423
 
-However, the main issue is not the lack of results. The problem is that, after selecting multiple filters, some filter options become unavailable or disappear entirely.
+Tested in Staging ("skip-2423.staging.igluski.com") after successful deployment.
 
-For example, all Country options disappeared, including the previously selected ones. This prevents the user from deselecting those countries or adjusting the search to get matching results.
+Validations performed:
 
-Even when no results are found, users should still be able to modify or remove their selected filters.
+- Confirmed that the PROMOTIONS section is positioned above REFINE RESORT DETAILS, as required.
+- Verified that Lift Pass Offers and Family Offers can be selected and that the search results update accordingly.
+- Confirmed that filters can be deselected and the results return to their previous state.
+- Verified that the new section positioning remains correct after filter interactions.
 
-The screenshots attached show this behaviour.
+QA Result: PASS
+
+The acceptance criterion has been met. No issues were identified during the performed tests.
+
+Screenshots attached as evidence.
