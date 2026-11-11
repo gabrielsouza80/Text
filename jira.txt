@@ -1,29 +1,25 @@
-QA Validation – PASS (Functional Regression / Staging)
+QA Validation – PASS (Staging / SKIP-2394)
 
-As requested, I performed a regression test on both the Old Booking and New Booking flows, using Holiday ID "195021750", to verify that removing the unused "GetDepositAmount" lookup does not affect the booking process or deposit calculations.
+Tested the Property Page to verify that the price update date is displayed in the supplier information section.
+
+Test data:
+
+- Property: Seehotel Sissi
+- Holiday ID: "202075020"
+- Displayed price: £442 per person
 
 Validations performed:
 
-- Successfully accessed the holiday in both booking flows.
-- Confirmed the guest selection, accommodation and flight details.
-- Progressed through the booking steps without identifying any blocking issues.
-- Compared the pricing and deposit amounts between both flows.
-- Verified that the optional £2 donation was reflected in the final total.
-- Reached and reviewed the Confirmation Page in both flows.
+- Confirmed that the new "Price imported" column is displayed in the supplier information table.
+- Verified that the date "2026-11-09 12:10" is correctly displayed.
+- Refreshed the page and confirmed that the date remains visible and unchanged.
+- Compared the SKIP-2394 branch against the regular Staging environment.
+- Confirmed that the "Price imported" column is present in the branch but absent from regular Staging.
+- Verified that the displayed holiday price remains unchanged (£442 per person).
+- No visual issues were identified in the affected section.
 
-Pricing comparison:
+Result: PASS – Functional Validation
 
-Item| Old Booking| New Booking
-Holiday price| £2,778.00| £2,778.00
-Optional donation| £2.00| £2.00
-Total| £2,780.00| £2,780.00
-Deposit paid| £390.00| £390.00
-Remaining balance| £2,390.00| £2,390.00
+The new column and its date are displayed as expected, satisfying the visual aspect of the acceptance criteria.
 
-Both Confirmation Pages displayed booking reference "1514033", and the New Booking confirmation showed the expected payment and holiday details.
-
-Result: PASS – Functional Regression
-
-No differences were identified in the deposit calculations or booking totals between the two flows.
-
-Scope note: This validation confirms the user-facing booking behaviour. Verification that "AvailabilityService.GetHoliday" no longer calls "GetDepositAmount" requires separate code-level or backend evidence.
+Note: The displayed field is labelled "Price imported". Its correspondence to the actual last price update timestamp has not been independently verified against the source data.
