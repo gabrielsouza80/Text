@@ -1,20 +1,19 @@
-SELECT
-    s.name AS SchemaName,
-    t.name AS TableName,
-    c.name AS ColumnName
-FROM [Ski].sys.tables AS t
-INNER JOIN [Ski].sys.schemas AS s
-    ON s.schema_id = t.schema_id
-INNER JOIN [Ski].sys.columns AS c
-    ON c.object_id = t.object_id
-WHERE
-    c.name IN (
-        'HolidayId',
-        'SupplierPriceAvailableId',
-        'SupplierFileId',
-        'SupplierUnitId',
-        'PropertyId'
-    )
-ORDER BY
-    t.name,
-    c.name;
+SELECT DISTINCT TOP (50)
+    os.PropertyId,
+    os.SupplierPriceAvailableId,
+    spa.SupplierFileId,
+    spa.SupplierUnitId,
+    spa.SupplierCode,
+    spa.Price,
+    spa.StartDate,
+    spa.Duration,
+    spa.BoardBasisCode,
+    spa.LastUpdated
+FROM [Ski].[dbo].[OptimisedSearch] AS os
+INNER JOIN [Ski].[dbo].[SupplierPriceAvailable] AS spa
+    ON os.SupplierPriceAvailableId = spa.SupplierPriceAvailableId
+WHERE os.PropertyId = 40374
+  AND spa.SupplierFileId = 414
+  AND spa.StartDate >= '2026-12-19'
+  AND spa.StartDate < '2026-12-20'
+ORDER BY spa.LastUpdated DESC;
