@@ -1,16 +1,29 @@
-QA Validation – PASS | SKIP-2423
+QA Validation – PASS (Functional Regression / Staging)
 
-Tested in Staging ("skip-2423.staging.igluski.com") after successful deployment.
+As requested, I performed a regression test on both the Old Booking and New Booking flows, using Holiday ID "195021750", to verify that removing the unused "GetDepositAmount" lookup does not affect the booking process or deposit calculations.
 
 Validations performed:
 
-- Confirmed that the PROMOTIONS section is positioned above REFINE RESORT DETAILS, as required.
-- Verified that Lift Pass Offers and Family Offers can be selected and that the search results update accordingly.
-- Confirmed that filters can be deselected and the results return to their previous state.
-- Verified that the new section positioning remains correct after filter interactions.
+- Successfully accessed the holiday in both booking flows.
+- Confirmed the guest selection, accommodation and flight details.
+- Progressed through the booking steps without identifying any blocking issues.
+- Compared the pricing and deposit amounts between both flows.
+- Verified that the optional £2 donation was reflected in the final total.
+- Reached and reviewed the Confirmation Page in both flows.
 
-QA Result: PASS
+Pricing comparison:
 
-The acceptance criterion has been met. No issues were identified during the performed tests.
+Item| Old Booking| New Booking
+Holiday price| £2,778.00| £2,778.00
+Optional donation| £2.00| £2.00
+Total| £2,780.00| £2,780.00
+Deposit paid| £390.00| £390.00
+Remaining balance| £2,390.00| £2,390.00
 
-Screenshots attached as evidence.
+Both Confirmation Pages displayed booking reference "1514033", and the New Booking confirmation showed the expected payment and holiday details.
+
+Result: PASS – Functional Regression
+
+No differences were identified in the deposit calculations or booking totals between the two flows.
+
+Scope note: This validation confirms the user-facing booking behaviour. Verification that "AvailabilityService.GetHoliday" no longer calls "GetDepositAmount" requires separate code-level or backend evidence.
