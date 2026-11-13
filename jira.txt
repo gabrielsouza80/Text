@@ -1,13 +1,21 @@
-QA Validation – BLOCKED (SKIP-2376)
+QA Validation – PASS (Staging / SKIP-2376)
 
-Unable to proceed with functional testing due to a failed TeamCity build.
+Tested the new Ski Deals section on the Resort and Country pages.
 
-Build: "#2.667.7425-SKIP-2376"
-Status: Failed
-Error: Compilation error in "Iglu.Ski.RedesignedWebPresentation.csproj" during the MSBuild step.
+Validations performed:
 
-Result: BLOCKED
+- Confirmed that the VIEW DEALS button scrolls to the new Ski Deals section.
+- Verified that the section displays four holiday deals in a carousel-style layout.
+- Confirmed that the displayed deals are relevant to the page context.
+- Tested the VIEW ALL DEALS button and confirmed that it redirects to the Ski Holidays search results page.
+- Verified that the correct resort is preselected when navigating from the Zell am See resort page ("resort=2121").
+- Confirmed that the search results correspond to Zell am See, with 63 properties displayed.
+- Tested the Austria country page and confirmed that the Ski Deals section displays four deals.
+- Verified that VIEW ALL DEALS redirects to the search results page with Austria applied through the URL parameter ("country=AT").
+- Confirmed that the displayed search results correspond to the selected country or resort.
 
-Functional validation has not been performed, as the branch could not be successfully built and deployed.
+Result: PASS – Functional Validation
 
-A successful build and deployment are required before QA testing can resume.
+The main functionality works as expected on the tested Resort and Country pages, including the deals section, navigation and prepopulated search results.
+
+No blocking functional issues were identified in the tested scenarios.
