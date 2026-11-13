@@ -1,15 +1,35 @@
 QA Validation – PARTIAL PASS (Staging / SKIP-2412)
 
-The loading spinner was successfully validated during availability checks and booking creation on desktop and mobile.
+Tested the loading spinner throughout the Online Booking flow on desktop and mobile (LambdaTest).
+
+Validated successfully:
+
+- The spinner is correctly displayed and aligned during the initial availability check.
+- The spinner is displayed during booking creation.
+- The booking flow continues normally after loading.
 
 Issues identified:
 
-#1 – Scroll position: When moving between booking steps, the page retains its previous scroll position on both desktop and mobile, affecting spinner visibility.
+⚠️ #1 – Scroll position not reset between booking steps
 
-#2 – Mobile payment: During payment processing, the custom spinner appears on desktop, but only the payment processing indicator appears on mobile (LambdaTest). Please confirm if this is expected.
+The spinner is initially displayed correctly. However, after scrolling down to complete the booking forms and proceeding to the next step, the page appears to retain its previous scroll position on both desktop and mobile.
 
-Result: PARTIAL PASS
+As a result, the spinner appears misaligned or partially outside the visible area.
 
-The main functionality works, but the issues above require review before final approval.
+Possible cause: The page may not automatically scroll back to the top when transitioning between steps.
 
-Evidence attached for #1 and #2.
+Expected: The loading spinner should remain clearly visible and properly positioned when advancing to the next step.
+
+⚠️ #2 – Custom spinner not displayed during mobile payment processing
+
+After entering card details and submitting the payment, the custom Booking spinner appears on desktop.
+
+However, on mobile (LambdaTest), even with noticeably slower processing, the custom spinner was not observed. Only the payment indicator ("Transaction is being processed. Please wait.") appeared.
+
+Expected: Please confirm whether this difference is intentional or whether the custom Booking spinner should also appear during mobile payment processing.
+
+Result: PARTIAL PASS – Review required
+
+The main spinner functionality works on both desktop and mobile. However, the scroll-position behaviour requires review, and the mobile payment indicator needs clarification before final QA approval.
+
+Evidence for #1 and #2 is attached above.
