@@ -1,35 +1,20 @@
-QA Validation – PARTIAL PASS (Staging / SKIP-2412)
+QA Validation – PASS with Known Limitation (Staging / SKIP-2319)
 
-Tested the loading spinner throughout the Online Booking flow on desktop and mobile (LambdaTest).
+Manually tested the Boost and Bury functionality in Bluebird and its impact on Iglu Ski Staging, using the existing Staging implementation and feature toggle.
 
 Validated successfully:
 
-- The spinner is correctly displayed and aligned during the initial availability check.
-- The spinner is displayed during booking creation.
-- The booking flow continues normally after loading.
+- Created and activated Boost rules targeting specific Holiday IDs or Property IDs.
+- Tested customer search criteria, including country, resort, departure airport, departure date range, and combinations of filters.
+- Validated rule start and expiry dates.
+- Confirmed that rules affect matching search results on the Ski website.
+- Boost worked as expected: a holiday initially displayed last in the results moved to first position when a Boost rule targeting France was activated and the customer searched or filtered by France.
 
-Issues identified:
+Known limitation:
 
-⚠️ #1 – Scroll position not reset between booking steps
+- The Bury functionality is not working as expected and remains unresolved.
+- This limitation has been acknowledged, and the ticket can proceed with it documented.
 
-The spinner is initially displayed correctly. However, after scrolling down to complete the booking forms and proceeding to the next step, the page appears to retain its previous scroll position on both desktop and mobile.
+Result: PASS – With Known Bury Limitation
 
-As a result, the spinner appears misaligned or partially outside the visible area.
-
-Possible cause: The page may not automatically scroll back to the top when transitioning between steps.
-
-Expected: The loading spinner should remain clearly visible and properly positioned when advancing to the next step.
-
-⚠️ #2 – Custom spinner not displayed during mobile payment processing
-
-After entering card details and submitting the payment, the custom Booking spinner appears on desktop.
-
-However, on mobile (LambdaTest), even with noticeably slower processing, the custom spinner was not observed. Only the payment indicator ("Transaction is being processed. Please wait.") appeared.
-
-Expected: Please confirm whether this difference is intentional or whether the custom Booking spinner should also appear during mobile payment processing.
-
-Result: PARTIAL PASS – Review required
-
-The main spinner functionality works on both desktop and mobile. However, the scroll-position behaviour requires review, and the mobile payment indicator needs clarification before final QA approval.
-
-Evidence for #1 and #2 is attached above.
+The Boost functionality was successfully validated in Staging. The Bury limitation remains documented for future resolution.
