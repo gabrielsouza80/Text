@@ -1,37 +1,78 @@
-QA Validation – PASS (Staging / SKIP-2276 – Main Flow)
+QA Validation – PASS (Staging / SKIP-2415 – Search Card Features)
 
-Manually validated the Online Booking Data Layer using the Simple Data Layer Viewer, completing the booking journey through to the Confirmation Page.
+Manually tested the Search Card Features functionality in Staging.
 
-Validated successfully:
+Environment: "https://skip-2415.staging.igluski.com/ski-holidays"
 
-- "begin_checkout" recorded when progressing from Options to Passenger Details.
-- "add_shipping_info" recorded when progressing from Passenger Details to Payment.
-- "add_payment_info" recorded after entering card details and clicking Pay, observed on the Confirmation Page.
-- Verified Holiday ID, travel dates, airports, resort, country, board basis, rooms, guests and item information.
-- Confirmed booking totals, including the selected £2 donation.
-- Validated payment details for deposit and full-balance scenarios.
-- Booking completed successfully.
+Validation performed:
 
-Result: PASS – Main Flow
+- Reviewed the Acceptance Criteria and the feature mapping table provided in the ticket.
+- Searched for ski holidays and checked the features displayed on the Search Cards.
+- Opened the corresponding hotel detail pages to compare the displayed features with the actual property features.
+- Tested different property feature filters, including Sauna, Jacuzzi/Hot Tub, and Swimming Pool, as well as family-related search criteria.
+- Checked that features were displayed using the expected grouping and naming conventions.
 
-All three expected events were recorded with the relevant booking and payment information. Full specification and privacy coverage was not completed.
+Hotels validated:
 
+1. Hotel Banyan – St Anton, Austria
+   
+   - Search Card: Swimming Pool, Gym, Sauna.
+   - Property details: Indoor Pool, Gym, Sauna.
+   - Confirmed that the Indoor Pool feature is represented as Swimming Pool on the Search Card.
 
+2. Résidence L'Éclat des Vériaz – Megève, France
+   
+   - Search Card: Swimming Pool, Hot Tub, Sauna, Hammam.
+   - Property details: Swimming Pool, Jacuzzi/Hot Tub, Sauna, Hammam.
+   - Confirmed that the corresponding facilities are correctly represented, including the Hot Tub grouping.
 
-Olá Gustavo, boa tarde!
+3. Hotel Paradiso – Passo Tonale, Italy
+   
+   - Search Card: Gym, Sauna, Kids Club.
+   - Property details: Gym, Sauna (extra charge), Kids Club.
+   - Confirmed that the relevant wellness and family facilities are displayed on the Search Card.
 
-Consegui validar o Data Layer do SKIP-2276 em Staging com a extensão Simple Data Layer Viewer.
+4. Hotel Serre Palas – Les Deux Alpes, France
+   
+   - Search Card: Childcare available.
+   - Property details: Childcare available.
+   - Confirmed that this family-related facility is displayed consistently.
 
-Completei uma reserva até à página de confirmação e confirmei os três eventos:
+5. Landhaus Mayrhofen – Mayrhofen, Austria
+   
+   - Search Card: Play Area.
+   - Property details: Play Area.
+   - Confirmed that the family facility is displayed correctly.
 
-- "begin_checkout" — ao avançar de Options para Passenger Details.
-- "add_shipping_info" — ao avançar de Passenger Details para Payment.
-- "add_payment_info" — após clicar em Pay, confirmado na página de Confirmation.
+6. Hotel Il Caminetto – Canazei, Italy
+   
+   - Search Card: Swimming Pool, Sauna, Wellness Area, Fitness Room, Play Area, Turkish Bath.
+   - Property details: Corresponding pool, sauna, fitness, wellness, and family facilities.
+   - Confirmed that multiple relevant features are displayed on the same Search Card.
 
-Também verifiquei os dados da reserva (Holiday ID, datas, aeroportos, resort, hóspedes, quartos, etc.), os valores e a inclusão da doação no total. Testei ainda os dados de pagamento nas opções de depósito e pagamento integral.
+7. Hotel Principi di Piemonte – Sestriere, Italy
+   
+   - Search Card: Swimming Pool, Hot Tub, Sauna, Kids Club, Fitness Room, Play Area.
+   - Property details: Corresponding facilities, including Indoor Pool, Hot Tub, Sauna, Kids Club, Fitness Room, and Play Area.
+   - Confirmed that the expected features are represented consistently.
 
-O fluxo principal funcionou corretamente.
+8. Hotel Ferienwelt Kristall – Rauris, Austria
+   
+   - Search Card: Swimming Pool, Outdoor Pool, Hot Tub, Sauna.
+   - Property details: Indoor Pool, Outdoor Pool, Hot Tub, Sauna, and related wellness facilities.
+   - Confirmed that the relevant pool and wellness facilities are represented on the Search Card.
 
-A única observação é que o "add_payment_info" foi identificado na página de confirmação, não tendo conseguido comprovar o instante exato do disparo.
+9. Club Med Les Arcs Panorama – Les Arcs 1600, France
+   
+   - Checked swimming pool, heated outdoor pool, hot tub, gym, and related wellness facilities across the search results and property details.
+   - Confirmed the representation of multiple facility types.
 
-Da minha parte, considero o cenário principal validado. Concordas com esta avaliação?
+Result: PASS
+
+The main Acceptance Criteria were successfully validated using multiple properties with different combinations of features.
+
+The tested Search Cards displayed the relevant features consistently with their corresponding property detail pages, including representative grouped feature mappings.
+
+No issues were identified in the tested scenarios.
+
+Validation covered representative properties and feature mappings rather than every individual mapping entry in the ticket.
