@@ -1,181 +1,34 @@
-Oi Gustavo, tudo bem?
+QA Validation – PASS (Staging – SKIP-2390)
 
-Estive a rever novamente os resultados do SKIP-2441 no staging e percebi que o problema é um pouco maior do que tinha indicado inicialmente.
+Environment: New Online Booking – Staging
 
-Fiz o teste em desktop, com a Variant B do experimento "non-block-refine-filters", utilizando o AB Smartly Experiment Previewer.
+Test results:
 
-Passo 1 — Aplicação dos filtros
+Validated the Inghams chalet booking restrictions for children under 12 across off-peak and peak dates.
 
-Entrei na página de Ski Holidays e fui selecionando filtros progressivamente até chegar a um cenário sem resultados exatos.
+Off-peak validation – Chalet Mathilde (Holiday ID: 199365720, 12–19 Dec 2026)
 
-Utilizei, entre outros:
+- Child aged 8: restriction message displayed and booking progression successfully blocked after clicking "Confirm guests".
+- Child aged 11: restriction message displayed.
+- Infant under 2: restriction message displayed.
+- Child aged 12: allowed to proceed to Room type.
+- Adults only: allowed to proceed to Room type.
 
-- Country: Italy
-- Ski Area: Espace San Bernardo
-- Accommodation: Chalet Hotel
-- Board Basis: Self Catered
-- Snowflake Rating: 3
-- Recommendations: Picturesque setting
+Peak-date validation:
 
-Também cheguei a selecionar uma opção de Resort durante o teste.
+- Christmas – Chalet L'Ancolie, Holiday ID 207484370, 19–26 Dec 2026: PASS.
+- New Year – Chalet La Bergerie, Holiday ID 208784296, 26 Dec 2026–2 Jan 2027: PASS.
+- Half Term – Chalet La Bergerie, Holiday ID 210621577, 13–20 Feb 2027: PASS.
+- Easter – Chalet La Bergerie, Holiday ID 208784401, 27 Mar–3 Apr 2027: PASS.
 
-Passo 2 — Resultado sem correspondências
+All four peak-date scenarios allowed a child aged 8 to proceed to Room type without triggering the under-12 restriction.
 
-Depois de aplicar os filtros, apareceu a mensagem:
+Room-capacity validation was also observed to operate independently from the age restriction.
 
-"Unfortunately no holidays match your search."
+Additional observation:
 
-Mas não apareceu a secção "More results...", com alternativas, como está descrito no ticket para este cenário.
+The property page displayed "Free kids' ski hire with this family friendly property" for an off-peak holiday where children under 12 cannot book. This may be misleading and should be reviewed separately as a potential content/UX issue.
 
-Passo 3 — Verificação dos filtros selecionados
+Scope: Validated through passenger confirmation and Room type. Full payment completion, boundary-overlap scenarios and direct API bypass attempts were not tested.
 
-Aqui consegui confirmar uma melhoria.
-
-Italy, Espace San Bernardo, Chalet Hotel, Self Catered, Rating 3 e Picturesque setting permaneceram selecionados e visíveis, mesmo com contador zero.
-
-No entanto, isto não funcionou para todos os filtros.
-
-Eu também tinha selecionado uma opção de Resort, mas, quando cheguei ao estado sem resultados, a secção Resort estava completamente vazia.
-
-Ou seja, a opção que tinha selecionado deixou de aparecer. Por isso, considero que o critério de manter todas as opções selecionadas visíveis e marcadas ainda não está totalmente cumprido.
-
-Passo 4 — Outras opções que desapareceram
-
-Encontrei também um comportamento inconsistente entre os filtros:
-
-- Country: só apresentava Italy; os outros países desapareceram.
-- Ski Areas: só apresentava Espace San Bernardo; as outras áreas desapareceram.
-- Resort: não apresentava nenhuma opção.
-- Good For e Property Features: não apresentavam alternativas visíveis.
-- Recommendations: apresentava a opção selecionada e as outras opções indisponíveis a cinzento.
-- Accommodation, Board Basis e Rating: também apresentavam as opções selecionadas e outras opções desativadas.
-
-O problema é que algumas secções mantêm as opções indisponíveis visíveis e desativadas, enquanto outras simplesmente as ocultam.
-
-O comportamento esperado é que as opções selecionadas continuem visíveis e marcadas. As opções indisponíveis também deveriam ter uma apresentação consistente, em vez de desaparecerem em determinadas secções.
-
-Passo 5 — Remoção de Italy
-
-Cliquei em Italy para remover o filtro.
-
-Italy deixou de estar selecionado e o URL deixou de conter "country=IT", mantendo "country=skiarea_5".
-
-Esta remoção parece ter funcionado corretamente. A pesquisa continuou sem resultados porque os outros filtros permaneceram ativos.
-
-Conclusão
-
-A correção funcionou parcialmente, mas ainda encontrei três problemas:
-
-1. O Resort que tinha selecionado desapareceu completamente quando cheguei ao estado sem resultados.
-2. Várias opções indisponíveis desapareceram de algumas secções, enquanto noutras continuaram visíveis e desativadas.
-3. O "More results..." não apareceu quando a pesquisa ficou sem resultados exatos.
-
-O ponto mais importante é o Resort, porque o critério de aceitação pede que todas as opções selecionadas permaneçam visíveis e marcadas, e isso não aconteceu no cenário que testei.
-
-Por estes motivos, vou atualizar a validação para FAIL – Retest Required, em vez de Partial Pass.
-
-Deixei também as imagens no Jira para ajudar a reproduzir e analisar os problemas.
-
-
-
-
-
-QA Validation – FAIL / Retest Required (Staging – SKIP-2441)
-
-Environment: "skip-2441.staging.igluski.com"
-Platform: Desktop – Chrome
-Experiment: "non-block-refine-filters" – Variant B
-
-Steps to reproduce
-
-1. Open the Ski Holidays search results page on staging.
-2. Select Variant B of "non-block-refine-filters" through the AB Smartly Experiment Previewer.
-3. Progressively apply multiple filters until the search reaches a no-exact-match state.
-
-Filters tested included:
-
-- Country: Italy
-- Ski Area: Espace San Bernardo
-- Accommodation: Chalet Hotel
-- Board Basis: Self Catered
-- Snowflake Rating: 3
-- Recommendations: Picturesque setting
-- Resort: A resort option was also selected during testing.
-
-4. Inspect the search results and every selected filter.
-5. Check the visibility of unavailable filter options.
-6. Remove the Italy filter and observe the updated URL and interface.
-
-Results
-
-1. Selected filters are not consistently preserved – FAIL
-
-Several selected filters correctly remained visible and checked when their result count reached zero:
-
-- Italy (0)
-- Espace San Bernardo (0)
-- Chalet Hotel (0)
-- Self Catered (0)
-- Snowflake Rating 3 (0)
-- Picturesque setting (0)
-
-However, a Resort option had also been selected during the test, and the Resort section became empty in the no-match state.
-
-The previously selected Resort option was no longer visible or identifiable as selected.
-
-This means the requirement for every selected option to remain visible and checked is not consistently met across all filter sections.
-
-2. Unavailable filter options disappear instead of remaining disabled – FAIL / UI inconsistency
-
-The following behaviour was observed:
-
-- Country: Only the selected Italy option remained visible. Other countries disappeared.
-- Ski Areas: Only the selected Espace San Bernardo option remained visible. Other ski areas disappeared.
-- Resort: No options were displayed.
-- Good For / Property Features: Alternative options were not visible in the observed state.
-- Recommendations: The selected option remained checked and unavailable alternatives were displayed as disabled.
-- Accommodation, Board Basis and Rating: Selected options remained checked and other unavailable options were displayed as disabled.
-
-Unavailable options are therefore handled inconsistently between sections, with some disappearing completely instead of remaining visible and disabled.
-
-3. Missing "More results..." section – FAIL / Investigation required
-
-When the filters produced no exact matches, the page displayed:
-
-"Unfortunately no holidays match your search."
-
-The expected "More results..." alternative-holidays section was not displayed.
-
-This differs from the no-match behaviour described in the ticket.
-
-4. Removing Italy – PASS for the observed interaction
-
-After clicking the selected Italy filter:
-
-- Italy was removed from the selection.
-- The URL no longer contained "country=IT".
-- The remaining Ski Area filter was still represented by "country=skiarea_5".
-
-The page continued showing no results because other filters remained selected.
-
-QA conclusion – FAIL
-
-The implementation partially fixes the original issue: several selected filters correctly remain visible and checked with a zero result count.
-
-However, the fix is incomplete.
-
-Outstanding issues:
-
-1. A previously selected Resort option disappears in the no-match state, leaving the Resort section empty.
-2. Unavailable filter options disappear in some sections, instead of being displayed consistently as disabled alternatives.
-3. The expected "More results..." alternative-results section is not displayed.
-
-Acceptance Criterion 1 is not fully satisfied, as a selected Resort option was not preserved visibly.
-
-Full regression coverage, including other removal actions, Clear links, filter pills, both variants and mobile, has not yet been completed.
-
-Result: FAIL – Retest Required.
-
-Screenshots have been attached as evidence. The ticket is not ready for QA sign-off.
-
-
+QA Result: PASS – Main acceptance criteria validated in the tested scenarios.
