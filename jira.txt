@@ -1,12 +1,3 @@
-Neste momento, tenho dois tickets disponíveis para testar:
+Hi Sian! Sure, I'll investigate the old Online Booking flow in staging to see if it's possible to complete a booking without a phone number.
 
-- SKIP-2276 — Online Booking > New Data Layer: In Test.
-- SKIP-2213 — Product API > Implement full search engine: Ready for Test.
-
-Se não surgirem bloqueios ou problemas durante os testes, acredito que consigo concluir a validação dos dois até amanhã.
-
-Quanto aos tickets que ainda estão em Code Review, caso avancem para Ready for Test, não consigo garantir que todos sejam validados antes do code freeze.
-
-Como o Giovani orientou deixar o SKIP-2213 por último, se houver outros tickets com maior prioridade que estejam prestes a ficar disponíveis para testes, avisem-me para que eu possa reorganizar a ordem das validações.
-
-Assim, conseguimos dar prioridade ao que é mais importante para o próximo deploy.
+I'll share my findings. If the sales team has any booking examples, Holiday IDs or other details, that could help me identify the issue faster.
