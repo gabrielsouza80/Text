@@ -1,12 +1,14 @@
-Desktop: PASS.
+QA Retest – Partial PASS / Issues Remaining (SKIP-2441)
 
-The new features have not been implemented on mobile. As clarified by the developer, it has been agreed to keep this behaviour unchanged for now.
+PASS: Previously selected filters remain visible and checked, even when their result count is 0, including Country and Resort.
 
+Issues identified:
 
-QA Re-validation – PASS (Staging – SKIP-2276)
+1. Country and Resort: Unlike other filter sections, unavailable options are not displayed as disabled. Only the selected options are shown.
+2. Resort: Unchecking the selected Resort (Andalo) leaves the section completely empty.
+3. Country: Unchecking Andalo also automatically removes the selected Country (Italy), even though it was not manually unchecked.
+4. easy-remove-refine-filters: Variant B was selected in the AB Smartly Experiment Previewer, but the expected removable filter pills were not observed during testing. The experiment's behaviour needs further investigation.
 
-Tested the Data Layer error-handling scenario by overriding "window.dataLayer.push" to throw an error from the Passenger Details step.
+Result: Partial PASS / FAIL – Retest required.
 
-Repeated the test in incognito mode across multiple holidays. Despite the simulated Data Layer errors, the booking flow continued successfully to the Confirmation Page in all tested scenarios.
-
-Result: PASS. The simulated Data Layer failure did not prevent booking completion.
+The main selected-filter preservation fix is working, but the remaining issues prevent full QA approval.
