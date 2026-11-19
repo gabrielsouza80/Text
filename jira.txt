@@ -1,3 +1,12 @@
-Hi Sian! Sure, I'll investigate the old Online Booking flow in staging to see if it's possible to complete a booking without a phone number.
+Desktop: PASS.
 
-I'll share my findings. If the sales team has any booking examples, Holiday IDs or other details, that could help me identify the issue faster.
+The new features have not been implemented on mobile. As clarified by the developer, it has been agreed to keep this behaviour unchanged for now.
+
+
+QA Re-validation – PASS (Staging – SKIP-2276)
+
+Tested the Data Layer error-handling scenario by overriding "window.dataLayer.push" to throw an error from the Passenger Details step.
+
+Repeated the test in incognito mode across multiple holidays. Despite the simulated Data Layer errors, the booking flow continued successfully to the Confirmation Page in all tested scenarios.
+
+Result: PASS. The simulated Data Layer failure did not prevent booking completion.
