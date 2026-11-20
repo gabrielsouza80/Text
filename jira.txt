@@ -1,28 +1,14 @@
-QA Validation – PASS / Scope Clarification Pending (Staging – SKIP-2434)
+QA Follow-up – Branch vs Main Staging (SKIP-2213)
 
-Environment: skip-2434.staging.igluski.com
-Platform: Desktop – Chrome
+Compared the search filters between the SKIP-2213 branch and Main Staging with Product API enabled.
 
-Tests performed:
+Most components appear consistent across both environments.
 
-1. Compared the Property Page (Hotel Banyan) between production and the staging branch.
-2. Confirmed that the old Customer Reviews section, including customer ratings and review content, is no longer displayed on staging.
-3. Compared the Resort Page (St Anton) between production and staging.
-4. Confirmed that the old Customer Reviews section and associated review content have been removed from the Resort Page.
-5. Checked that the remaining page content and layout were preserved.
+Two minor differences were identified:
 
-Results:
+- Good For: The "Luxury Holidays" option is visible but disabled on the branch, while it is not displayed on Main Staging.
+- Price pp: The maximum price value differs between the environments. The branch displays £1pp, while Main Staging displays £3,000+pp.
 
-- PASS: Old Customer Reviews removed from the Property Page.
-- PASS: Old Customer Reviews removed from the Resort Page.
-- PASS: No visible layout issues identified in the areas checked.
+No other visible differences were identified in the components compared.
 
-Additional observation / Question for Sian:
-
-Feefo ratings and reviews are still displayed in the website header and footer.
-
-@Sian Forrest — Should these Feefo reviews remain visible, or should they also be removed as part of SKIP-2434?
-
-QA Result: PASS for the implemented removal of old Customer Reviews from the validated Property and Resort pages.
-
-Pending: Confirmation of whether the Feefo ratings in the header and footer are within the scope of this ticket.
+Result: Minor differences identified. Further confirmation is needed to determine whether these are expected Product API data differences or require correction.
