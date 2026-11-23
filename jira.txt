@@ -1,14 +1,15 @@
-QA Follow-up – Branch vs Main Staging (SKIP-2213)
+QA Retest – Desktop PASS / Mobile FAIL (SKIP-2441)
 
-Compared the search filters between the SKIP-2213 branch and Main Staging with Product API enabled.
+Desktop validation passed in the scenarios tested.
 
-Most components appear consistent across both environments.
+However, two issues were identified on mobile:
 
-Two minor differences were identified:
+1. Ski Area – Filters disappearing: As filters are progressively applied and no matching results remain, both the previously selected Ski Area option and unavailable options gradually disappear from the filter panel instead of remaining visible. The selected option is no longer displayed as checked, contrary to the expected behaviour of preserving selected filters with a result count of 0.
 
-- Good For: The "Luxury Holidays" option is visible but disabled on the branch, while it is not displayed on Main Staging.
-- Price pp: The maximum price value differs between the environments. The branch displays £1pp, while Main Staging displays £3,000+pp.
+2. Unexpected scrolling: Every time filters are applied and the search results/cards reload, the page automatically scrolls upwards, interrupting the filtering process and forcing the user to scroll back down to continue selecting filters.
 
-No other visible differences were identified in the components compared.
+QA Result: Desktop PASS / Mobile FAIL – Retest required.
 
-Result: Minor differences identified. Further confirmation is needed to determine whether these are expected Product API data differences or require correction.
+The disappearance of the selected Ski Area option directly contradicts the ticket's acceptance criteria. The progressive disappearance of unavailable options was also observed and requires further investigation.
+
+Full QA approval remains pending until the mobile issues are resolved.
