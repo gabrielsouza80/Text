@@ -1,15 +1,24 @@
-QA Retest – Desktop PASS / Mobile FAIL (SKIP-2441)
+QA Validation – PASS (Staging – SKIP-2435)
 
-Desktop validation passed in the scenarios tested.
+Environment: skip-2435.staging.igluski.com
+Platform: Desktop – Chrome
 
-However, two issues were identified on mobile:
+Tests performed:
 
-1. Ski Area – Filters disappearing: As filters are progressively applied and no matching results remain, both the previously selected Ski Area option and unavailable options gradually disappear from the filter panel instead of remaining visible. The selected option is no longer displayed as checked, contrary to the expected behaviour of preserving selected filters with a result count of 0.
+1. Compared the Terms and Conditions section on Property Pages between production and the staging branch.
+2. Confirmed that the outdated Terms and Conditions text has been replaced with the updated content.
+3. Verified that the tourist tax information has been updated to approximately £10–£50 per person per week.
+4. Confirmed that the new text includes a reference to cancellations, amendments and booking policies.
+5. Clicked the Terms and Conditions link and verified that it correctly redirects to the Terms and Conditions page.
+6. Checked the updated section on multiple properties to confirm consistent behaviour.
+7. Verified that no visible layout issues were introduced in the sections tested.
 
-2. Unexpected scrolling: Every time filters are applied and the search results/cards reload, the page automatically scrolls upwards, interrupting the filtering process and forcing the user to scroll back down to continue selecting filters.
+Results:
 
-QA Result: Desktop PASS / Mobile FAIL – Retest required.
+- PASS: Updated Terms and Conditions text displayed correctly.
+- PASS: Tourist tax information matches the acceptance criteria.
+- PASS: Terms and Conditions link works as expected.
+- PASS: Consistent behaviour across the properties tested.
+- PASS: No visible layout issues identified.
 
-The disappearance of the selected Ski Area option directly contradicts the ticket's acceptance criteria. The progressive disappearance of unavailable options was also observed and requires further investigation.
-
-Full QA approval remains pending until the mobile issues are resolved.
+QA Result: PASS – All acceptance criteria validated in the tested desktop scenarios.
