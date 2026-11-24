@@ -1,35 +1,25 @@
-QA Validation – PARTIAL PASS (Staging – SKIP-2356)
+QA Validation – PARTIAL PASS / Issues Identified (Staging – SKIP-2356)
 
 Environment: skip-2356.staging.igluski.com
-Platform: Desktop Chrome and mobile emulation (Chrome DevTools)
+Platforms: Desktop Chrome and Mobile (Chrome DevTools)
 
-Tests performed:
+Passed tests:
 
-1. Verified the redesigned Resort Page image gallery and compared its layout with the Property Page gallery.
-2. Confirmed that resort photographs display correctly and that navigation using the gallery arrows works.
-3. Verified that all photographs can be accessed, including the last image.
-4. Tested the Location section and confirmed that the resort map is displayed.
-5. Tested the Piste maps section and confirmed that the piste map is displayed.
-6. Verified navigation between the Location, Piste maps, Photos and Videos sections.
-7. Confirmed that the resort video plays successfully on desktop.
-8. Tested the gallery using mobile emulation, including the photo gallery, navigation and available sections.
+- Gallery layout consistent with the Property Page.
+- Photo navigation working correctly, including access to all images.
+- Location map and Piste maps displaying correctly.
+- Navigation between Location, Piste maps, Photos and Videos working.
+- Video playback working on desktop.
+- Mobile photo gallery and section navigation working.
 
-Results:
+Issues identified:
 
-- PASS: Gallery layout and presentation in the desktop scenarios tested.
-- PASS: Photo navigation and access to all images.
-- PASS: Resort location map displayed.
-- PASS: Piste map displayed.
-- PASS: Navigation between gallery sections.
-- PASS: Video playback on desktop.
-- PASS: Photo gallery and section navigation in mobile emulation.
+- Scroll position: On desktop and mobile, after opening the map in fullscreen and returning to the Resort Page, the page scrolls upwards instead of preserving the previous position. Comparison with production is pending.
 
 Pending validation:
 
-Video playback could not be fully validated on mobile. Playback was not successfully confirmed through Chrome DevTools emulation, and further testing in LambdaTest was blocked because the tunnel was inactive.
+- Mobile video playback: Could not be confirmed using DevTools. LambdaTest testing was blocked by an inactive tunnel. This is not yet a confirmed application defect.
 
-Therefore, this is an outstanding validation item, not a confirmed application defect.
+QA Result: PARTIAL PASS – Further investigation and retesting required.
 
-QA Result: PARTIAL PASS – Mobile video playback validation pending.
-
-All other tested scenarios behaved as expected. Final QA approval remains pending confirmation of mobile video playback.
+Final approval remains pending investigation of the scroll behaviour and confirmation of video playback on mobile.
