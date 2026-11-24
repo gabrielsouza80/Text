@@ -1,11 +1,30 @@
-QA Update – Testing Blocked by Error 500 (SKIP-2213)
+QA Validation – PARTIAL PASS (Staging – SKIP-2356)
+Environment: skip-2356.staging.igluski.com
+Platform: Desktop Chrome and mobile emulation (Chrome DevTools)
+Tests performed:
 
-I was continuing the investigation to identify any additional differences between the SKIP-2213 branch and Main Staging.
+Verified the redesigned Resort Page image gallery and compared its layout with the Property Page gallery.
+Confirmed that resort photographs display correctly and that navigation using the gallery arrows works.
+Verified that all photographs can be accessed, including the last image.
+Tested the Location section and confirmed that the resort map is displayed.
+Tested the Piste maps section and confirmed that the piste map is displayed.
+Verified navigation between the Location, Piste maps, Photos and Videos sections.
+Confirmed that the resort video plays successfully on desktop.
+Tested the gallery using mobile emulation, including the photo gallery, navigation and available sections.
 
-The differences identified so far have already been documented in my previous comment.
+Results:
 
-However, the branch is currently returning an Error 500 when accessing the search results page ("/ski-holidays"), preventing me from continuing the validation.
+PASS: Gallery layout and presentation in the desktop scenarios tested.
+PASS: Photo navigation and access to all images.
+PASS: Resort location map displayed.
+PASS: Piste map displayed.
+PASS: Navigation between gallery sections.
+PASS: Video playback on desktop.
+PASS: Photo gallery and section navigation in mobile emulation.
 
-QA Status: BLOCKED – Testing will resume once the server error is resolved.
-
-Screenshot attached.
+Pending validation:
+Video playback could not be fully validated on mobile. Playback was not successfully confirmed through Chrome DevTools emulation, and further testing in LambdaTest was blocked because the tunnel was inactive.
+Therefore, this is an outstanding validation item, not a confirmed application defect.
+QA Result: PARTIAL PASS – Mobile video playback validation pending.
+All other tested scenarios behaved as expected. Final QA approval remains pending confirmation of mobile video playback.
+s
