@@ -1,30 +1,35 @@
 QA Validation – PARTIAL PASS (Staging – SKIP-2356)
+
 Environment: skip-2356.staging.igluski.com
 Platform: Desktop Chrome and mobile emulation (Chrome DevTools)
+
 Tests performed:
 
-Verified the redesigned Resort Page image gallery and compared its layout with the Property Page gallery.
-Confirmed that resort photographs display correctly and that navigation using the gallery arrows works.
-Verified that all photographs can be accessed, including the last image.
-Tested the Location section and confirmed that the resort map is displayed.
-Tested the Piste maps section and confirmed that the piste map is displayed.
-Verified navigation between the Location, Piste maps, Photos and Videos sections.
-Confirmed that the resort video plays successfully on desktop.
-Tested the gallery using mobile emulation, including the photo gallery, navigation and available sections.
+1. Verified the redesigned Resort Page image gallery and compared its layout with the Property Page gallery.
+2. Confirmed that resort photographs display correctly and that navigation using the gallery arrows works.
+3. Verified that all photographs can be accessed, including the last image.
+4. Tested the Location section and confirmed that the resort map is displayed.
+5. Tested the Piste maps section and confirmed that the piste map is displayed.
+6. Verified navigation between the Location, Piste maps, Photos and Videos sections.
+7. Confirmed that the resort video plays successfully on desktop.
+8. Tested the gallery using mobile emulation, including the photo gallery, navigation and available sections.
 
 Results:
 
-PASS: Gallery layout and presentation in the desktop scenarios tested.
-PASS: Photo navigation and access to all images.
-PASS: Resort location map displayed.
-PASS: Piste map displayed.
-PASS: Navigation between gallery sections.
-PASS: Video playback on desktop.
-PASS: Photo gallery and section navigation in mobile emulation.
+- PASS: Gallery layout and presentation in the desktop scenarios tested.
+- PASS: Photo navigation and access to all images.
+- PASS: Resort location map displayed.
+- PASS: Piste map displayed.
+- PASS: Navigation between gallery sections.
+- PASS: Video playback on desktop.
+- PASS: Photo gallery and section navigation in mobile emulation.
 
 Pending validation:
+
 Video playback could not be fully validated on mobile. Playback was not successfully confirmed through Chrome DevTools emulation, and further testing in LambdaTest was blocked because the tunnel was inactive.
+
 Therefore, this is an outstanding validation item, not a confirmed application defect.
+
 QA Result: PARTIAL PASS – Mobile video playback validation pending.
+
 All other tested scenarios behaved as expected. Final QA approval remains pending confirmation of mobile video playback.
-s
