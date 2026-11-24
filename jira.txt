@@ -1,25 +1,19 @@
-QA Validation – PARTIAL PASS / Issues Identified (Staging – SKIP-2356)
+QA Update – Automated Regression in Progress (SKIP-2430)
 
-Environment: skip-2356.staging.igluski.com
-Platforms: Desktop Chrome and Mobile (Chrome DevTools)
+Executed the full-site Playwright regression suite as part of the SKIP-2430 validation.
 
-Passed tests:
+Initial results:
 
-- Gallery layout consistent with the Property Page.
-- Photo navigation working correctly, including access to all images.
-- Location map and Piste maps displaying correctly.
-- Navigation between Location, Piste maps, Photos and Videos working.
-- Video playback working on desktop.
-- Mobile photo gallery and section navigation working.
+- 393 tests in total
+- 354 passed
+- 38 failed
+- 1 flaky
+- 4 skipped
 
-Issues identified:
+I am currently investigating the failed tests to determine whether they are genuine regressions, environment-related issues or automation failures.
 
-- Scroll position: On desktop and mobile, after opening the map in fullscreen and returning to the Resort Page, the page scrolls upwards instead of preserving the previous position. Comparison with production is pending.
+The affected scenarios will be compared with Main Staging where necessary.
 
-Pending validation:
+QA Status: IN TEST – Failure analysis and regression validation ongoing.
 
-- Mobile video playback: Could not be confirmed using DevTools. LambdaTest testing was blocked by an inactive tunnel. This is not yet a confirmed application defect.
-
-QA Result: PARTIAL PASS – Further investigation and retesting required.
-
-Final approval remains pending investigation of the scroll behaviour and confirmation of video playback on mobile.
+A further update will be provided once the findings have been confirmed.
