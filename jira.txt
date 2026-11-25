@@ -1,24 +1,14 @@
-Bom dia, Gustavo.
+QA Retest – PARTIAL PASS (SKIP-2441)
 
-Analisei as falhas da regressão automatizada do 2430 e verifiquei que a maioria ocorreu nos testes do Online Booking.
+During retesting, the filter selection experience on desktop behaved as expected.
 
-Consegui reproduzir manualmente o problema. Ao clicar em Confirm guests, aparece a mensagem "We couldn't load your holiday", impedindo-me de continuar até à Confirmation Page.
+However, the following issues persist on mobile, even with variant B enabled in AB Smartly:
 
-Confirmei também que a release 212-SKIP-2430 do Onlinebooking BFF está em Staging.
+- Filter interactions are still intermittently blocked while search results are updating.
+- The filter panel scrolls upwards whenever the search result cards finish loading, forcing the user to scroll back down to continue selecting filters.
 
-Consegues verificar se existe algum problema com esta versão ou com alguma integração do Online Booking?
+These issues affect the mobile user experience, unlike the smoother behaviour observed on desktop.
 
+QA Result: PARTIAL PASS – Mobile issues persist. Further investigation and retesting required.
 
-QA Update – Regression Failure Investigation (SKIP-2430)
-
-Following the automated regression failure analysis, most failures were identified in the Online Booking flow.
-
-The issue was reproduced manually. After clicking Confirm guests, the application displays the error message "We couldn't load your holiday", preventing progression through the booking flow to the Confirmation Page.
-
-The Onlinebooking BFF release 212-SKIP-2430 is deployed to Staging.
-
-Further investigation is required to determine whether this is a regression introduced by the A/B test cleanup or an existing environment or integration issue.
-
-QA Status: IN TEST – Online Booking validation partially blocked.
-
-Screenshots attached.
+Evidence shared with Gustavo.
