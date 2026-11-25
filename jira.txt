@@ -1,19 +1,24 @@
-QA Update – Automated Regression in Progress (SKIP-2430)
+Bom dia, Gustavo.
 
-Executed the full-site Playwright regression suite as part of the SKIP-2430 validation.
+Analisei as falhas da regressão automatizada do 2430 e verifiquei que a maioria ocorreu nos testes do Online Booking.
 
-Initial results:
+Consegui reproduzir manualmente o problema. Ao clicar em Confirm guests, aparece a mensagem "We couldn't load your holiday", impedindo-me de continuar até à Confirmation Page.
 
-- 393 tests in total
-- 354 passed
-- 38 failed
-- 1 flaky
-- 4 skipped
+Confirmei também que a release 212-SKIP-2430 do Onlinebooking BFF está em Staging.
 
-I am currently investigating the failed tests to determine whether they are genuine regressions, environment-related issues or automation failures.
+Consegues verificar se existe algum problema com esta versão ou com alguma integração do Online Booking?
 
-The affected scenarios will be compared with Main Staging where necessary.
 
-QA Status: IN TEST – Failure analysis and regression validation ongoing.
+QA Update – Regression Failure Investigation (SKIP-2430)
 
-A further update will be provided once the findings have been confirmed.
+Following the automated regression failure analysis, most failures were identified in the Online Booking flow.
+
+The issue was reproduced manually. After clicking Confirm guests, the application displays the error message "We couldn't load your holiday", preventing progression through the booking flow to the Confirmation Page.
+
+The Onlinebooking BFF release 212-SKIP-2430 is deployed to Staging.
+
+Further investigation is required to determine whether this is a regression introduced by the A/B test cleanup or an existing environment or integration issue.
+
+QA Status: IN TEST – Online Booking validation partially blocked.
+
+Screenshots attached.
