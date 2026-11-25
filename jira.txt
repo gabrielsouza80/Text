@@ -1,12 +1,9 @@
-QA Update – Retest Failed (SKIP-2430)
+QA Retest – PASS (Staging – SKIP-2356)
 
-During further regression testing, the following behaviour was identified:
+Retested the issues and pending scenarios documented in the previous QA comment.
 
-- New Online Booking (Variant B): Now working in the retested scenarios.
-- Old Online Booking (Variant A): Returns Error 500 when clicking the Book Online button. The issue was reproduced across multiple holidays.
+- PASS: Scroll position is now preserved when returning to the Resort Page after closing the fullscreen view on desktop and mobile.
+- PASS: Mobile video playback successfully validated.
+- PASS: All previously reported issues and pending validation items have been addressed.
 
-The issue was reported to Gustavo, who confirmed that both booking flows are within the testing scope and has identified the error.
-
-QA Status: FAIL – Returned to In Progress for correction. Retesting required.
-
-Screenshots attached.
+QA Result: PASS – All acceptance criteria validated. Ready for Deploy.
