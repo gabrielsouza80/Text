@@ -1,9 +1,44 @@
-QA Retest – PASS (Staging – SKIP-2356)
+QA Validation – PARTIAL PASS / Review Required (SKIP-2466)
 
-Retested the issues and pending scenarios documented in the previous QA comment.
+Executed the automated Playwright regression suite on Bluebird Staging and performed additional manual functional testing.
 
-- PASS: Scroll position is now preserved when returning to the Resort Page after closing the fullscreen view on desktop and mobile.
-- PASS: Mobile video playback successfully validated.
-- PASS: All previously reported issues and pending validation items have been addressed.
+Automated regression results:
 
-QA Result: PASS – All acceptance criteria validated. Ready for Deploy.
+- 20 functional tests passed.
+- 1 functional test failed (BAB21 – Holiday IDs field rejects non-numeric input).
+- Authentication setup passed.
+
+Manual validation:
+
+- Boost rule creation and editing working.
+- Rule correctly displayed in the Live tab.
+- Boost functionality successfully validated on the Ski Site.
+- Using Mayrhofen as the search criteria, Apart Pauline moved from the last position to the first position, above Pension Kumbichlhof.
+
+Issues identified:
+
+- Holiday IDs validation: The field within the Targeting section accepts non-numeric characters without displaying a validation error.
+- Scrollbar: No visible vertical scrollbar was identified on the rule form, which may affect usability.
+
+Further confirmation is required to determine whether these issues are pre-existing or related to the Next.js upgrade.
+
+QA Result: PARTIAL PASS – Functional regression mostly successful, pending confirmation of the identified issues.
+
+Playwright report and supporting screenshots attached.
+
+
+
+
+
+Gustavo, no ticket 2466 executei a regressão automatizada do Bluebird e apenas um teste falhou.
+
+Identifiquei dois pontos:
+
+- O campo Holiday IDs, dentro de Targeting, aceita letras e não apresenta nenhuma mensagem de erro.
+- O formulário das regras não apresenta uma barra de scroll vertical visível, o que pode dificultar a navegação.
+
+Também validei manualmente a funcionalidade de Boost no Ski Site. Utilizando Mayrhofen como critério de pesquisa, o Apart Pauline passou da última posição para a primeira, acima do Pension Kumbichlhof. Funcionou corretamente.
+
+Sabes se esses dois problemas já existiam antes da atualização do Next.js ou se estão relacionados com este ticket?
+
+Caso sejam problemas preexistentes, preferes corrigi-los no próprio 2466 ou abrir um novo ticket para tratá-los separadamente e avançar com a aprovação deste?
