@@ -1,11 +1,20 @@
-QA Retest Update – SKIP-2441
+QA Validation – PARTIAL PASS (SKIP-2471)
 
-Mobile – Variant B
+The Online Booking flow was successfully completed up to the Confirmation Page.
 
-- PASS: The filter panel no longer scrolls back to the top when filters are updated.
-- UX observation: The scroll position still shifts slightly during filter updates, but navigation remains possible.
-- Pending clarification: Search results are updated immediately when filters are selected, before clicking the Apply button. During these updates, filter interactions are temporarily blocked.
+However, a scroll issue was identified on Google Chrome. When scrolling upwards, the page automatically scrolls back down, preventing the user from viewing certain booking details.
 
-Could we confirm whether this is the expected behaviour on mobile, considering that the Apply button is available?
+The same behaviour was not reproduced on Microsoft Edge.
 
-QA Status: IN TEST – Awaiting clarification on the remaining mobile behaviour.
+Further investigation is required to determine whether this is a browser-specific issue, a pre-existing issue or a regression introduced by the Next.js upgrade.
+
+QA Status: IN TEST – Further investigation required.
+
+Evidence attached.
+
+
+Gustavo, no 2471 consegui concluir o booking normalmente, mas encontrei um problema na Confirmation Page. Sempre que faço scroll para cima, a página volta automaticamente para baixo.
+
+Testei também no Edge e funciona normalmente. Até agora, só consegui reproduzir o problema no Chrome.
+
+Sabes se este comportamento já existia antes da atualização do Next.js?
