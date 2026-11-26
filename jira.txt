@@ -1,81 +1,21 @@
-SKIP-2470 — Functional Regression Validation
+QA Validation – PASS (Staging – SKIP-2470)
 
-Recebi uma confirmação do developer responsável pelo ticket, Giovani, sobre a estratégia de validação.
+Manual regression testing was performed following the developer's guidance.
 
-Não é necessário reproduzir diretamente o erro original relacionado com "JsonConvert.DefaultSettings", uma vez que esse erro é difícil de simular através dos endpoints disponíveis.
+Passed scenarios:
 
-O developer confirmou que devemos realizar dois bookings consecutivos:
+- Club Med – Old and New Online Booking.
+- Crystal – Old and New Online Booking.
+- All four booking flows successfully reached the Confirmation Page.
 
-1. Booking — Club Med
+No functional regressions were identified in the tested scenarios.
 
-- Identificar um holiday válido e disponível do fornecedor Club Med.
-- Executar o fluxo completo de booking em Staging.
-- Validar as etapas, os dados, os preços e as respostas das APIs envolvidos no processo.
-- Concluir o booking e confirmar que a Confirmation Page é apresentada corretamente.
-- Registar o Holiday ID, Booking Reference e as evidências relevantes.
+The original date serialisation issue and Blue Alert payload were not directly validated due to limited observability.
 
-2. Booking — Crystal
+QA Result: PASS – Functional regression validation completed.
 
-Imediatamente após concluir o booking do Club Med:
+Screenshots attached.
 
-- Identificar um holiday válido e disponível do fornecedor Crystal.
-- Executar o fluxo completo de booking, preferencialmente na mesma sessão, sem reiniciar os serviços entre as operações.
-- Confirmar que todas as etapas funcionam corretamente.
-- Concluir o booking e validar a Confirmation Page.
-- Registar o Holiday ID, Booking Reference e as evidências relevantes.
 
-O developer confirmou que todos os bookings da Crystal geram um Blue Alert, portanto não é necessário procurar um holiday específico para esse efeito.
 
-3. Validação complementar — Blue Alert (opcional)
-
-Caso seja possível através da infraestrutura, dos endpoints, dos logs ou dos acessos já disponíveis:
-
-- Confirmar que o Blue Alert foi gerado após o booking da Crystal.
-- Verificar os campos "RaisedUtc" e "DepartureDate".
-- Confirmar que as datas apresentam o formato esperado, sem perda indevida da informação temporal causada pelas configurações globais de serialização.
-
-Caso não exista acesso aos Blue Alerts ou aos respetivos logs, não bloqueies a execução nem a conclusão da regressão funcional por esse motivo. Regista esta validação como NOT TESTED e explica a limitação.
-
-4. Regras de execução
-
-- Utilizar exclusivamente o ambiente de Staging e dados de teste autorizados.
-- Confirmar que as versões relacionadas com o SKIP-2470 estão efetivamente deployed.
-- Reutilizar os testes, fixtures, helpers e infraestrutura de automação existentes.
-- Garantir que o booking da Crystal é executado apenas após a conclusão do booking do Club Med.
-- Não executar os dois bookings em paralelo.
-- Não utilizar pagamentos reais.
-- Não alterar o código da aplicação.
-- Não modificar testes existentes desnecessariamente.
-- Não executar deploys, commits, push ou merge.
-- Não ocultar falhas nem alterar assertions apenas para fazer os testes passar.
-- Não assumir que utilizar a mesma sessão garante que os pedidos são processados pela mesma instância da API.
-
-5. Relatório final
-
-Apresentar:
-
-- Resultado do booking Club Med.
-- Resultado do booking Crystal.
-- Resultado da validação opcional do Blue Alert.
-- Holiday IDs e Booking References.
-- Falhas encontradas e respetivas evidências.
-- Erros relevantes das APIs, caso existam.
-- Ficheiros criados ou modificados.
-- Relatório Playwright com screenshots e traces, quando disponíveis.
-- Recomendação final de QA: PASS, PARTIAL PASS, FAIL ou BLOCKED.
-
-Se ambos os bookings forem concluídos com sucesso, considerar a regressão funcional solicitada pelo developer como PASS.
-
-Distinguir claramente a aprovação da regressão funcional da confirmação técnica da correção do defeito original de serialização.
-
-Antes de executar, analisa a infraestrutura existente e reutiliza o máximo possível. Evita investigações desnecessárias que não contribuam para a estratégia de validação agora confirmada pelo developer.Os dois bookings devem ser realizados através da UI do Ski Site, utilizando a automação Playwright existente.
-
-Reutiliza os Page Objects, helpers e testes de Online Booking já implementados no repositório.
-
-Durante a execução, monitoriza também as chamadas às APIs, verificando possíveis erros nos requests, responses e payloads.
-
-Executa primeiro o booking completo do Club Med e, imediatamente depois, o booking completo da Crystal, até à Confirmation Page.
-
-A verificação do Blue Alert é complementar e deverá ser realizada apenas se existirem meios de acesso disponíveis.
-
-Não cries uma nova infraestrutura de automação nem substituas os bookings pela execução isolada de endpoints.
+Giovani, fiz os bookings do Club Med e da Crystal, tanto no antigo como no novo Online Booking. Os quatro chegaram à Confirmation Page sem problemas. Só não validei diretamente o Blue Alert, mas a regressão funcional passou.
