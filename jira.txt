@@ -1,9 +1,166 @@
-QA Update – PASS (SKIP-2466)
+SKIP-2470 — Club Med Supplier SDK — QA Validation
 
-Following the regression testing, the two identified issues were confirmed by the developer as pre-existing and outside the scope of this ticket.
+Atua como Senior QA Automation Engineer, especializado em testes de APIs, integração e regressão.
 
-The remaining automated tests passed, and the Boost functionality was successfully validated manually on the Ski Site.
+Antes de avançar, garante que os testes reproduzem especificamente a causa descrita no SKIP-2470.
 
-The identified issues will be tracked separately.
+1. Contexto do ticket — tradução da descrição original
 
-QA Result: PASS – No regressions identified within the tested scope.
+Por que as datas aparecem como "20261124"?
+
+No "Iglu.BookingAlerts.Models 1.0.227", os campos "RaisedUtc" e "DepartureDate" são propriedades simples do tipo "DateTime", sem conversores ou atributos.
+
+Com as configurações padrão do Newtonsoft, essas propriedades seriam serializadas como strings no formato ISO, por exemplo:
+
+"2027-05-29T00:00:00"
+
+No entanto, o "Ski.SupplierSDK.ClubMedSDK 1.0.230", referenciado pelo "iglu.Booking.Supplier.Core", contém uma classe estática chamada "JsonExtensions", cujo construtor altera globalmente as configurações de "JsonConvert.DefaultSettings".
+
+O construtor estático é executado na primeira vez que uma instância da Booking API realiza uma chamada ao Club Med.
+
+Depois disso, todas as chamadas a "JsonConvert.SerializeObject" que utilizam as configurações padrão nesse processo passam a serializar as datas no formato "yyyyMMdd".
+
+Isso inclui:
+
+- Booking Alerts SDK;
+- Logs que utilizam "ToJson()";
+- Qualquer outra operação que utilize as configurações padrão de serialização.
+
+Isso também explica por que o problema acontece apenas algumas vezes: depende de a instância da API ter processado ou não uma chamada ao Club Med desde que foi iniciada.
+
+2. Critério de aceitação
+
+O SDK não deve definir configurações globais padrão para o serializador JSON.
+
+A serialização específica do Club Med não deve interferir nas configurações de outras operações ou serviços.
+
+3. Ambiente
+
+Os deployments necessários já foram realizados em Staging:
+
+- iglu.Booking.API (Container);
+- Ski Merch API (Containers).
+
+Confirma as versões disponíveis e utiliza exclusivamente o ambiente de Staging.
+
+4. Estratégia de validação
+
+Precisamos comparar a serialização das datas antes e depois de uma chamada ao Club Med, garantindo que as operações são processadas pela mesma instância da API.
+
+Investiga os endpoints Quote e CreateQuote, assim como outros endpoints existentes que possam permitir observar o problema descrito no ticket.
+
+Não assumas que esses endpoints são suficientes sem confirmar o comportamento e o caminho de execução.
+
+Cenários obrigatórios
+
+TC01 — Serialização antes de uma chamada ao Club Med
+
+- Executar uma operação que utilize a serialização padrão.
+- Capturar o payload JSON original.
+- Validar o formato das datas.
+
+TC02 — Executar uma chamada ao Club Med
+
+- Utilizar uma holiday válida do Club Med.
+- Executar uma operação que efetivamente utilize o SDK do fornecedor.
+- Confirmar que a operação funciona corretamente.
+
+TC03 — Serialização após uma chamada ao Club Med
+
+- Repetir a operação executada no TC01.
+- Garantir que foi processada pela mesma instância da API.
+- Comparar os payloads antes e depois.
+- Confirmar que as datas continuam no formato ISO esperado e não foram indevidamente convertidas para "yyyyMMdd".
+
+TC04 — Booking Alerts
+
+Validar especificamente os campos:
+
+- "RaisedUtc";
+- "DepartureDate".
+
+Confirmar que ambos mantêm o formato esperado, incluindo a informação temporal aplicável, após uma chamada ao Club Med.
+
+Investiga como aceder aos payloads dos Booking Alerts através da infraestrutura existente, logs ou outros mecanismos autorizados.
+
+TC05 — Regressão do Club Med
+
+Confirmar que a remoção das configurações globais não afetou as operações do próprio Club Med.
+
+Validar também que os formatos de data específicos exigidos pelo fornecedor continuam a ser respeitados.
+
+TC06 — Regressão de outros fornecedores
+
+Executar operações de outros fornecedores antes e depois de chamadas ao Club Med.
+
+Confirmar que não existe interferência na serialização nem regressão funcional.
+
+TC07 — Chamadas consecutivas e alternadas
+
+Executar uma sequência de chamadas ao Club Med e a outros fornecedores, validando que o problema não reaparece após múltiplas operações.
+
+TC08 — Quote e CreateQuote
+
+Validar os endpoints relevantes, incluindo:
+
+- Status codes;
+- Request e response payloads;
+- Formatos das datas;
+- Integridade dos dados;
+- Comportamento funcional;
+- Erros inesperados.
+
+5. Regras de execução
+
+- Utiliza os endpoints e a infraestrutura de testes já existentes no repositório.
+- Reutiliza fixtures, configurações, helpers e mecanismos de autenticação existentes.
+- Mantém a estrutura e os padrões atuais da automação.
+- Não alteres o código da aplicação.
+- Não alteres testes existentes apenas para fazê-los passar.
+- Não executes operações em Production.
+- Não cries reservas reais nem efetues pagamentos.
+- Não exponhas credenciais, tokens ou dados sensíveis nos relatórios.
+- Não reinicies serviços nem alteres configurações de Staging sem autorização.
+- Não faças commit, push ou deploy.
+
+Não quero apenas validar os status codes, mas também o conteúdo dos payloads e o formato das datas.
+
+Analisa o conteúdo do JSON original antes de qualquer transformação ou conversão feita pela automação, para evitar falsos positivos.
+
+6. Garantia da validade dos testes
+
+O problema original é intermitente e depende do estado da instância da API.
+
+Por isso:
+
+- Identifica como garantir ou comprovar que as chamadas são processadas pela mesma instância.
+- Não assumas que utilizar o mesmo endpoint ou a mesma sessão significa utilizar a mesma instância.
+- Confirma que a chamada ao Club Med realmente executou o SDK afetado.
+- Se possível, compara o comportamento com uma versão anterior à correção, sem alterar o ambiente partilhado.
+- Investiga se existem testes unitários ou de integração que comprovem que o SDK deixou de modificar "JsonConvert.DefaultSettings".
+
+Caso não seja possível observar diretamente os Booking Alerts ou garantir a mesma instância, documenta essa limitação.
+
+Não consideres o ticket totalmente validado apenas porque os endpoints retornaram respostas bem-sucedidas.
+
+7. Relatório final
+
+Apresenta:
+
+- Endpoints utilizados;
+- Versões e ambientes testados;
+- Cenários executados;
+- Resultados esperados e obtidos;
+- Payloads relevantes antes e depois da chamada ao Club Med, sem dados sensíveis;
+- Evidências da serialização das datas;
+- Resultados dos testes de regressão;
+- Falhas identificadas;
+- Limitações e bloqueios;
+- Ficheiros de automação criados ou modificados;
+- Total de testes PASS, FAIL, BLOCKED e NOT TESTED;
+- Cobertura do critério de aceitação;
+- Recomendação final de QA, devidamente fundamentada.
+
+Primeiro, analisa o repositório e a infraestrutura disponível. Depois, implementa e executa os testes que sejam tecnicamente viáveis e seguros.
+
+Não inventes endpoints, resultados ou evidências. O objetivo principal é comprovar que o problema de serialização global foi corrigido e que a atualização não introduziu regressões.
