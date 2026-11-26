@@ -1,20 +1,107 @@
-QA Validation – PARTIAL PASS (SKIP-2471)
+QA Validation – PASS (Staging – SKIP-2471)
 
-The Online Booking flow was successfully completed up to the Confirmation Page.
+The Online Booking flow was successfully validated up to the Confirmation Page.
 
-However, a scroll issue was identified on Google Chrome. When scrolling upwards, the page automatically scrolls back down, preventing the user from viewing certain booking details.
+Observation:
+A scroll issue was identified on the Confirmation Page in Google Chrome. However, the issue was not reproduced in Chrome Incognito mode or Microsoft Edge.
 
-The same behaviour was not reproduced on Microsoft Edge.
+The behaviour may be related to browser cache or session state. No regression associated with the Next.js upgrade was confirmed.
 
-Further investigation is required to determine whether this is a browser-specific issue, a pre-existing issue or a regression introduced by the Next.js upgrade.
+This issue will be tracked separately for further investigation.
 
-QA Status: IN TEST – Further investigation required.
+QA Result: PASS – Ready for Deploy.
 
 Evidence attached.
 
 
-Gustavo, no 2471 consegui concluir o booking normalmente, mas encontrei um problema na Confirmation Page. Sempre que faço scroll para cima, a página volta automaticamente para baixo.
+Online Booking > Confirmation Page > Unexpected automatic scrolling on Chrome
 
-Testei também no Edge e funciona normalmente. Até agora, só consegui reproduzir o problema no Chrome.
+Issue:
 
-Sabes se este comportamento já existia antes da atualização do Next.js?
+On the Online Booking Confirmation Page, when the user scrolls upwards, the page automatically scrolls back down to a previous position, preventing access to certain booking details.
+
+Environment: Staging
+
+Steps to reproduce:
+
+1. Open the Ski Site using Google Chrome in normal browsing mode.
+2. Select a holiday and complete the Online Booking flow.
+3. Reach the Confirmation Page.
+4. Scroll upwards.
+5. Release the scrollbar and observe the behaviour.
+
+Actual result:
+
+The page automatically scrolls back down. The user can only maintain the desired position while holding the scrollbar.
+
+Expected result:
+
+The user should be able to scroll freely throughout the Confirmation Page without unexpected automatic scrolling.
+
+Additional findings:
+
+- Reproduced in Google Chrome (normal browsing mode).
+- Not reproduced in Google Chrome Incognito mode.
+- Not reproduced in Microsoft Edge.
+- Browser cache or session state is suspected, but the root cause has not been confirmed.
+- Identified during SKIP-2471 regression testing.
+
+Video evidence attached.
+
+
+- Users can scroll freely throughout the Confirmation Page.
+- The page does not automatically change the user's scroll position unexpectedly.
+- All booking details remain accessible.
+- The behaviour is consistent across supported browsers.
+- Existing Online Booking functionality remains unaffected.
+
+
+
+
+Xxxxxx
+
+
+Bluebird > Boost and Bury > Holiday IDs validation and scrollbar issues
+
+Environment: Bluebird – Staging
+
+Description:
+
+During regression testing for SKIP-2466, two pre-existing issues were identified on the Boost and Bury rule form.
+
+Issue 1 – Holiday IDs input validation
+
+Steps to reproduce:
+
+1. Navigate to the Boost and Bury page.
+2. Create or edit a rule.
+3. Navigate to the Targeting section.
+4. Select Holiday IDs as the Target Type.
+5. Enter non-numeric characters, such as "abc".
+
+Actual result: The field accepts non-numeric characters without displaying a validation error.
+
+Expected result: The field should validate Holiday IDs and prevent invalid values from being saved, displaying an appropriate error message.
+
+Issue 2 – Missing visible vertical scrollbar
+
+Steps to reproduce:
+
+1. Navigate to the Boost and Bury page.
+2. Open the rule form.
+3. Navigate through the form.
+
+Actual result: No visible vertical scrollbar is displayed, which may make navigation less intuitive.
+
+Expected result: A visible vertical scrollbar should be available when the form content exceeds the viewport height.
+
+Both issues were confirmed by the developer as pre-existing and outside the scope of SKIP-2466.
+
+
+- The Holiday IDs field accepts valid numeric IDs, including multiple IDs separated by commas.
+- Non-numeric and invalid Holiday IDs are rejected.
+- An appropriate validation message is displayed when invalid input is entered.
+- Rules containing invalid Holiday IDs cannot be saved.
+- A vertical scrollbar is visible when the form content exceeds the viewport height.
+- Users can navigate through the entire rule form.
+- Existing Boost and Bury functionality remains unaffected.
