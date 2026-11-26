@@ -1,21 +1,11 @@
-QA Validation – PASS (Staging – SKIP-2470)
+QA Retest Update – SKIP-2441
 
-Manual regression testing was performed following the developer's guidance.
+Mobile – Variant B
 
-Passed scenarios:
+- PASS: The filter panel no longer scrolls back to the top when filters are updated.
+- UX observation: The scroll position still shifts slightly during filter updates, but navigation remains possible.
+- Pending clarification: Search results are updated immediately when filters are selected, before clicking the Apply button. During these updates, filter interactions are temporarily blocked.
 
-- Club Med – Old and New Online Booking.
-- Crystal – Old and New Online Booking.
-- All four booking flows successfully reached the Confirmation Page.
+Could we confirm whether this is the expected behaviour on mobile, considering that the Apply button is available?
 
-No functional regressions were identified in the tested scenarios.
-
-The original date serialisation issue and Blue Alert payload were not directly validated due to limited observability.
-
-QA Result: PASS – Functional regression validation completed.
-
-Screenshots attached.
-
-
-
-Giovani, fiz os bookings do Club Med e da Crystal, tanto no antigo como no novo Online Booking. Os quatro chegaram à Confirmation Page sem problemas. Só não validei diretamente o Blue Alert, mas a regressão funcional passou.
+QA Status: IN TEST – Awaiting clarification on the remaining mobile behaviour.
