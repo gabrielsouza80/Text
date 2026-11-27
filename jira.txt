@@ -1,107 +1,15 @@
-QA Validation – PASS (Staging – SKIP-2471)
+QA Update – Retest Failed (SKIP-2430)
 
-The Online Booking flow was successfully validated up to the Confirmation Page.
+During further regression testing, an issue was identified in the Old Online Booking flow (Variant A).
 
-Observation:
-A scroll issue was identified on the Confirmation Page in Google Chrome. However, the issue was not reproduced in Chrome Incognito mode or Microsoft Edge.
+The previously reported error when accessing Online Booking no longer occurs. However, when progressing from the Book step to Payment, the application redirects to an Error 500 page, preventing completion of the booking.
 
-The behaviour may be related to browser cache or session state. No regression associated with the Next.js upgrade was confirmed.
+Further investigation is required to determine whether this issue is related to the A/B test cleanup.
 
-This issue will be tracked separately for further investigation.
+QA Result: FAIL – Further investigation and retesting required.
 
-QA Result: PASS – Ready for Deploy.
-
-Evidence attached.
-
-
-Online Booking > Confirmation Page > Unexpected automatic scrolling on Chrome
-
-Issue:
-
-On the Online Booking Confirmation Page, when the user scrolls upwards, the page automatically scrolls back down to a previous position, preventing access to certain booking details.
-
-Environment: Staging
-
-Steps to reproduce:
-
-1. Open the Ski Site using Google Chrome in normal browsing mode.
-2. Select a holiday and complete the Online Booking flow.
-3. Reach the Confirmation Page.
-4. Scroll upwards.
-5. Release the scrollbar and observe the behaviour.
-
-Actual result:
-
-The page automatically scrolls back down. The user can only maintain the desired position while holding the scrollbar.
-
-Expected result:
-
-The user should be able to scroll freely throughout the Confirmation Page without unexpected automatic scrolling.
-
-Additional findings:
-
-- Reproduced in Google Chrome (normal browsing mode).
-- Not reproduced in Google Chrome Incognito mode.
-- Not reproduced in Microsoft Edge.
-- Browser cache or session state is suspected, but the root cause has not been confirmed.
-- Identified during SKIP-2471 regression testing.
-
-Video evidence attached.
-
-
-- Users can scroll freely throughout the Confirmation Page.
-- The page does not automatically change the user's scroll position unexpectedly.
-- All booking details remain accessible.
-- The behaviour is consistent across supported browsers.
-- Existing Online Booking functionality remains unaffected.
+Screenshots attached.
 
 
 
-
-Xxxxxx
-
-
-Bluebird > Boost and Bury > Holiday IDs validation and scrollbar issues
-
-Environment: Bluebird – Staging
-
-Description:
-
-During regression testing for SKIP-2466, two pre-existing issues were identified on the Boost and Bury rule form.
-
-Issue 1 – Holiday IDs input validation
-
-Steps to reproduce:
-
-1. Navigate to the Boost and Bury page.
-2. Create or edit a rule.
-3. Navigate to the Targeting section.
-4. Select Holiday IDs as the Target Type.
-5. Enter non-numeric characters, such as "abc".
-
-Actual result: The field accepts non-numeric characters without displaying a validation error.
-
-Expected result: The field should validate Holiday IDs and prevent invalid values from being saved, displaying an appropriate error message.
-
-Issue 2 – Missing visible vertical scrollbar
-
-Steps to reproduce:
-
-1. Navigate to the Boost and Bury page.
-2. Open the rule form.
-3. Navigate through the form.
-
-Actual result: No visible vertical scrollbar is displayed, which may make navigation less intuitive.
-
-Expected result: A visible vertical scrollbar should be available when the form content exceeds the viewport height.
-
-Both issues were confirmed by the developer as pre-existing and outside the scope of SKIP-2466.
-
-
-- The Holiday IDs field accepts valid numeric IDs, including multiple IDs separated by commas.
-- Non-numeric and invalid Holiday IDs are rejected.
-- An appropriate validation message is displayed when invalid input is entered.
-- Rules containing invalid Holiday IDs cannot be saved.
-- A vertical scrollbar is visible when the form content exceeds the viewport height.
-- Users can navigate through the entire rule form.
-- Existing Boost and Bury functionality remains unaffected.
+Gustavo, no 2430, o erro 500 ao entrar no booking antigo já não acontece, mas agora encontrei um erro 500 ao avançar da etapa Book para Payment, impedindo a conclusão do booking. Consegues verificar?
